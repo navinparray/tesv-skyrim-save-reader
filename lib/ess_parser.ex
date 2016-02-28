@@ -111,7 +111,7 @@ defmodule ESSParser do
       player_sex: player_sex,
       player_current_experience: player_current_experience,
       player_level_up_experience: player_level_up_experience,
-       file_time: file_time,
+      file_time: file_time,
       shot_width: shot_width,
       shot_height: shot_height,
       form_version: form_version,

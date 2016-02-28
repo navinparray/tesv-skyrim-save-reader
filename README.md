@@ -30,7 +30,7 @@
 
   Global Data
 
-  1. Combat
+ ~~1. Combat~~
         http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Combat
 
   2. Interface
