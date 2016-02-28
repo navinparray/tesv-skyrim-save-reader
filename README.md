@@ -21,16 +21,17 @@
 
   Sections that still need to be parsed
 
-  *Change Forms
-  *Global Data Table 3
-  *Form ID Array
-  *Visited Worldspace Array
-  *unknown 3 Table
+  * Change Forms
+  * Global Data Table 3
+  * Form ID Array
+  * Visited Worldspace Array
+  * unknown 3 Table
+  * parse RefId data
 
 
   Global Data
 
- ~~1. Combat~~
+ 1. Combat
         http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Combat
 
   2. Interface
@@ -89,5 +90,11 @@
 
   20. Main
         http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Main
+
+  ~~21. TES~~
+        http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/TES
+
+  ~~22. Effects~~
+        http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Effects
 
 
