@@ -1,8 +1,8 @@
-# SkyrimSaveReader
+# Skyrim Save Reader
 
-  The objective of this project is to create a system that can read a game savefile for the gae "The Elder Scrolls V: Skyrim" and output the data as a JSON string. The system should also be able to acept a properly formated JSON string and save as a valid savefile. 
+  The objective of this project is to create a system that can read a game savefile for the game "The Elder Scrolls V: Skyrim" and output the data as a JSON string. The system should also be able to acept a properly formated JSON string and save as a valid savefile. 
 
-  Some my builds in Skyrim make use of Alchemy and I would like to be able to extract a listing of alchemical ingredients from a characters inventory using the savefile. 
+  Some of my builds in Skyrim make use of Alchemy and I would like to be able to extract a listing of alchemical ingredients from a characters inventory using the savefile. 
 
   This aplication is to function as a utility that can be called by other systems.
 
@@ -21,11 +21,11 @@
 
   Sections that still need to be parsed
 
-  Change Forms
-  Global Data Table 3
-  Form ID Array
-  Visited Worldspace Array
-  unknown 3 Table
+  *Change Forms
+  *Global Data Table 3
+  *Form ID Array
+  *Visited Worldspace Array
+  *unknown 3 Table
 
 
   Global Data
