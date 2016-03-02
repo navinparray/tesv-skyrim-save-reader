@@ -2,29 +2,29 @@ defmodule Parser.GlobalData do
 
   def parse(<<>>, acc) do
     acc
-  end  
+  end
 
   def parse(
-    << 
-      data_type::little-unsigned-integer-size(32), 
-      data_length::little-unsigned-integer-size(32), 
-      data_read::binary-size(data_length), 
+    <<
+      data_type::little-unsigned-integer-size(32),
+      data_length::little-unsigned-integer-size(32),
+      data_read::binary-size(data_length),
       rest :: binary
     >>, acc) do
 
     this_data = parse_global_data_by_type(data_type, data_read)
 
     parse(rest, acc ++ [{data_type, data_length, this_data}])
-  end  
+  end
 
- 
+
   defp parse_global_data_by_type(0, data) do
   	Parser.GlobalData.MiscStats.parse(data)
   end
 
   defp parse_global_data_by_type(1, data) do
   	Parser.GlobalData.PlayerLocation.parse(data)
-  end  
+  end
 
   defp parse_global_data_by_type(2, data) do
     Parser.GlobalData.TES.parse(data)
@@ -67,7 +67,7 @@ defmodule Parser.GlobalData do
   end
 
   defp parse_global_data_by_type(103, data) do
-    data
+    Parser.GlobalData.ActorCauses.parse(data)
   end
 
   defp parse_global_data_by_type(104, data) do
@@ -140,6 +140,6 @@ defmodule Parser.GlobalData do
 
   defp parse_global_data_by_type(_, data) do
     data
-  end  
+  end
 
 end

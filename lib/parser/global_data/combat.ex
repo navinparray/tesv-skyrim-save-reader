@@ -6,7 +6,7 @@ defmodule Parser.GlobalData.Combat do
 
     format of the structure is (Variable Sized)
 
-    next_num        uint32 
+    next_num        uint32
     count0          vsval
     unknown         Unknown0[count0]
     count1          vsval
@@ -87,7 +87,7 @@ defmodule Parser.GlobalData.Combat do
     count1          vsval
     unknown         Unknown0_0_2_1[count1]
     unknown_flag    uint8
-    unknown         Unknown0_0_2_2          This value is only present 
+    unknown         Unknown0_0_2_2          This value is only present
                                             if unknown_flag is not zero
 
 
@@ -96,7 +96,7 @@ defmodule Parser.GlobalData.Combat do
     unknown         unt32
     unknown         float
 
-  
+
     Unknown0_0_2_1 Structure (9 Bytes)
     unknown         RefId
     unknown         RefId
@@ -173,7 +173,6 @@ defmodule Parser.GlobalData.Combat do
   """
 
   def parse(data) do
-
     <<
       next_num::little-unsigned-integer-size(32),
       count_0_byte::little-integer-size(8),
@@ -193,7 +192,7 @@ defmodule Parser.GlobalData.Combat do
   end
 
   defp read_unknown0_structure(count, data) do
-    IO.inspect data
+
     <<
       unknown_0::little-unsigned-integer-size(32),
       serial_num::little-unsigned-integer-size(32),
@@ -206,7 +205,7 @@ defmodule Parser.GlobalData.Combat do
       unknown_0: unknown_0,
       serial_num: serial_num,
       unknown_data: unknown_data,
-    ], rest]
+    ], rest1]
   end
 
   defp read_unknown0_0_structure(data) do
@@ -235,15 +234,14 @@ defmodule Parser.GlobalData.Combat do
     #  + (15 * 5) + (4 * 6)
     #  = 117
     record_size = (count * 117)
-    IO.inspect record_size
     <<
         unknown_data::binary-size(record_size),
         rest::binary
     >> = data
-    structure_data = read_unknown0_0_0_record(data)
+    # structure_data = read_unknown0_0_0_record(rest)
 
     [
-        unknown0_0_0: structure_data,
+        unknown0_0_0: unknown_data,
         rest: rest
     ]
   end
@@ -304,6 +302,6 @@ defmodule Parser.GlobalData.Combat do
       z: z,
       cell_id: cell_id
     ]
-    
+
   end
 end
