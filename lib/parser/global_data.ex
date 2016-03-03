@@ -83,7 +83,7 @@ defmodule Parser.GlobalData do
   end
 
   defp parse_global_data_by_type(106, data) do
-    data
+    Parser.GlobalData.LocationMetaData.parse(data)
   end
 
   defp parse_global_data_by_type(107, data) do

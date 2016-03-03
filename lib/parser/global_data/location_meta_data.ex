@@ -1,8 +1,8 @@
-defmodule Parser.GlobalData.DetectionManager do
+defmodule Parser.GlobalData.LocationMetaData do
   @moduledoc """
-    parse data for detection manager section of global data table
+    parse data for location meta data section of global data table
 
-    format for section is taken from here - http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Detection_Manager
+    format for section is taken from here - http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Location_MetaData
 
     format of the structure is (Variable Sized)
 
@@ -43,17 +43,14 @@ defmodule Parser.GlobalData.DetectionManager do
     <<
       unknown0::binary-size(3),
       unknown1::little-unsigned-integer-size(32),
-      unknown2::little-unsigned-integer-size(32),
       rest::binary
     >>  = data
 
     record = [
       unknown0: unknown0,
-      unknown1: unknown1,
-      unknown2: unknown2
+      unknown1: unknown1
     ]
 
     read_unknown0_structure(count - 1, rest, acc ++ [record])
   end
-
 end

@@ -1,6 +1,6 @@
 defmodule Parser.GlobalData.Interface do
   @moduledoc """
-    parse data for actor causes section of global data table
+    parse data for interface section of global data table
 
     format for section is taken from here - http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Interface
 

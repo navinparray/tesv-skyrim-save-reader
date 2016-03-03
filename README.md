@@ -47,7 +47,7 @@ Global Data
 ~~5. Detection Manager~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Detection_Manager
 
-6. Location MetaData
+~~6. Location MetaData~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Location_MetaData
 
 7. Quest Static Data
