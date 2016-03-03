@@ -63,7 +63,7 @@ defmodule Parser.GlobalData do
   end
 
   defp parse_global_data_by_type(102, data) do
-    data
+    Parser.GlobalData.Interface.parse(data)
   end
 
   defp parse_global_data_by_type(103, data) do
