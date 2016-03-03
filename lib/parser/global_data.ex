@@ -70,12 +70,16 @@ defmodule Parser.GlobalData do
     Parser.GlobalData.ActorCauses.parse(data)
   end
 
+  @doc """
+    no data format is available
+  """
+
   defp parse_global_data_by_type(104, data) do
     data
   end
 
   defp parse_global_data_by_type(105, data) do
-    data
+    Parser.GlobalData.DetectionManager.parse(data)
   end
 
   defp parse_global_data_by_type(106, data) do
