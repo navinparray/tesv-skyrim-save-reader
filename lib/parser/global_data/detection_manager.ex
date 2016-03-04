@@ -20,18 +20,9 @@ defmodule Parser.GlobalData.DetectionManager do
   """
 
   def parse(data) do
-    <<
-      count_0_byte::little-integer-size(8),
-      rest::binary
-    >> = data
 
-    [count_0, rest1] = Parser.Utils.read_vs_val(count_0_byte, rest)
-    unknown = read_unknown0_structure(count_0, rest1, [])
-
-    [
-      count_0,
-      unknown
-    ]
+    [count_0, rest] = Parser.Utils.read_vsval(data)
+    unknown = read_unknown0_structure(count_0, rest, [])
 
   end
 

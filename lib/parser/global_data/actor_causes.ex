@@ -21,13 +21,11 @@ defmodule Parser.GlobalData.ActorCauses do
   """
 
   def parse(data) do
-    <<
-      next_num::little-unsigned-integer-size(32),
-      count_0_byte::little-integer-size(8),
-      rest::binary
-    >> = data
 
-    [count_0, rest1] = Parser.Utils.read_vs_val(count_0_byte, rest)
+    [next_num, rest] = Parser.Utils.read_uint32(data)
+
+    [count_0, rest1] = Parser.Utils.read_vsval(rest)
+
     unknown_1 = read_unknown0_structure(count_0, rest1)
 
     [

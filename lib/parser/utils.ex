@@ -120,7 +120,29 @@ defmodule Parser.Utils do
 		[value, rest]
 	end
 
+	def read_float(data) do
+		read_float_data(data)
+	end
+
+	defp read_float_data(<<value::little-float-size(32)>>) do
+		[value, <<>>]
+	end
+
+	defp read_float_data(
+	<<value::little-float-size(32),
+		rest::binary>>) do
+		[value, rest]
+	end
+
 	def read_refid(data) do
+		read_refid_data(data)
+	end
+
+	defp read_refid_data(<<refid::binary-size(3)>>) do
+		[refid, <<>>]
+	end
+
+	defp read_refid_data(data) do
 		<<refid::binary-size(3),
 			rest::binary
 		>> = data
