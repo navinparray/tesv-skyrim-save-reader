@@ -103,7 +103,7 @@ defmodule Parser.GlobalData do
   end
 
   defp parse_global_data_by_type(111, data) do
-    data
+    Parser.GlobalData.StoryEventManager.parse(data)
   end
 
   defp parse_global_data_by_type(112, data) do

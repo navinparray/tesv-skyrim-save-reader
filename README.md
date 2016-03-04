@@ -21,10 +21,7 @@ Format conventions can be found here http://www.uesp.net/wiki/Tes5Mod:File_Forma
 
 Sections that still need to be parsed
 
-* Change Forms
-* Global Data Table 3
-* Form ID Array
-* Visited Worldspace Array
+* Change Formsy
 * unknown 3 Table
 * parse RefId data
 
@@ -62,7 +59,7 @@ Global Data
 ~~10. Player Controls~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/PlayerControls
 
-11. Story Event Manager
+~~11. Story Event Manager~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Story_Event_Manager
 
 12. Ingredient Shared

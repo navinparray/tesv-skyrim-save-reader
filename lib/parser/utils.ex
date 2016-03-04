@@ -107,10 +107,16 @@ defmodule Parser.Utils do
 	end
 
 	def read_uint32(data) do
-		<<value::little-unsigned-integer-size(32),
-			rest::binary
-		>> = data
+		read_uint32_data(data)
+	end
 
+	defp read_uint32_data(<<value::little-unsigned-integer-size(32)>>) do
+		[value, <<>>]
+	end
+
+	defp read_uint32_data(
+	<<value::little-unsigned-integer-size(32),
+		rest::binary>>) do
 		[value, rest]
 	end
 
