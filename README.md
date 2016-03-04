@@ -50,10 +50,10 @@ Global Data
 ~~6. Location MetaData~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Location_MetaData
 
-7. Quest Static Data
+~~7. Quest Static Data~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Quest_Static_Data
 
-8. StoryTeller
+~~8. StoryTeller~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/StoryTeller
 
 9. Magic Favorites

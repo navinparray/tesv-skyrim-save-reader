@@ -91,7 +91,7 @@ defmodule Parser.GlobalData do
   end
 
   defp parse_global_data_by_type(108, data) do
-    data
+    Parser.GlobalData.StoryTeller.parse(data)
   end
 
   defp parse_global_data_by_type(109, data) do
