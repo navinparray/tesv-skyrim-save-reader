@@ -108,7 +108,7 @@ defmodule Parser.Utils do
 		[refid, rest]
 	end
 
-	def read_redid_list(count, data) do
+	def read_refid_list(count, data) do
 		parse_refid_list(count, data, [])
 	end
 

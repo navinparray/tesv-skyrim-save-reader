@@ -60,15 +60,15 @@ defmodule Parser.GlobalData.QuestStaticData do
 
     [count_2, rest4] = Parser.Utils.read_uint32(rest3)
 
-    [unknown_2, rest5] = Parser.Utils.read_redid_list(count_2, rest4)
+    [unknown_2, rest5] = Parser.Utils.read_refid_list(count_2, rest4)
 
     [count_3, rest6] = Parser.Utils.read_uint32(rest5)
 
-    [unknown_3, rest7] = Parser.Utils.read_redid_list(count_3, rest6)
+    [unknown_3, rest7] = Parser.Utils.read_refid_list(count_3, rest6)
 
     [count_4, rest8] = Parser.Utils.read_uint32(rest7)
 
-    [unknown_4, rest9] = Parser.Utils.read_redid_list(count_4, rest8)
+    [unknown_4, rest9] = Parser.Utils.read_refid_list(count_4, rest8)
 
     [count_5, rest10] = Parser.Utils.read_vsval(rest9)
 
