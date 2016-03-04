@@ -1,6 +1,6 @@
 defmodule Parser.Structs.ESSData do
 	@derive [Poison.Encoder]
-	
+
   defstruct [
     magic: nil,
     header_size: nil,
@@ -29,6 +29,7 @@ defmodule Parser.Structs.ESSData do
     global_data_table_1_offset: nil,
     global_data_table_2_offset: nil,
     change_form_offset: nil,
+    global_data_table_3_offset: nil,
     global_data_table_1_count: nil,
     global_data_table_2_count: nil,
     global_data_table_3_count: nil,
@@ -41,6 +42,6 @@ defmodule Parser.Structs.ESSData do
     form_id_array: [],
     visited_worldspace_array: [],
     unknown_table_3: []
-  ]	
+  ]
 
 end

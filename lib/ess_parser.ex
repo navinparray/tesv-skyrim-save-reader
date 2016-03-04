@@ -6,8 +6,8 @@ defmodule ESSParser do
 
       iex> ESSParser.decode("Save 3 Saryn Embershard Mine 00.42.13.ess")
       {:ok, "[1,2,3]"}
-  """  
-  
+  """
+
   @spec decode(String.t()) :: String.t()
 
   def decode(file_name) do
@@ -59,11 +59,12 @@ defmodule ESSParser do
       global_data_table_1_offset :: little-unsigned-integer-size(32),
       global_data_table_2_offset :: little-unsigned-integer-size(32),
       change_form_offset :: little-unsigned-integer-size(32),
+      global_data_table_3_offset :: little-unsigned-integer-size(32),
       global_data_table_1_count :: little-unsigned-integer-size(32),
       global_data_table_2_count :: little-unsigned-integer-size(32),
       global_data_table_3_count :: little-unsigned-integer-size(32),
       change_form_count :: little-unsigned-integer-size(32),
-      unused :: little-unsigned-integer-size(512), # 32 * 16
+      unused :: binary-size(60), # 32 * 15
       rest1 :: binary
     >> = rest
 
@@ -73,12 +74,14 @@ defmodule ESSParser do
     >> = plugin_data
     plugin_list = Parser.PluginInfo.parse(rest_plugin_data, [])
 
-    # Global data table 1 
+    # Global data table 1
     # length is global_data_table_2_offset -  global_data_table_1_offset
 
     global_data_table_1_length = global_data_table_2_offset -  global_data_table_1_offset
     global_data_table_2_length = change_form_offset -  global_data_table_2_offset
-    
+    change_forms_length = global_data_table_3_offset - change_form_offset
+    global_data_table_3_length = form_id_array_count_offset -  global_data_table_3_offset
+
     <<
       global_data_table_1_data :: binary-size(global_data_table_1_length),
       other_data :: binary
@@ -93,6 +96,17 @@ defmodule ESSParser do
 
     global_data_table_2 = Parser.GlobalData.parse(global_data_table_2_data, [])
 
+    <<
+      chnage_form_data :: binary-size(change_forms_length),
+      other_data :: binary
+    >> = other_data
+
+    <<
+      global_data_table_3_data :: binary-size(global_data_table_3_length),
+      other_data :: binary
+    >> = other_data
+
+    global_data_table_3 = Parser.GlobalData.parse(global_data_table_3_data, [])
 
     ess_data = %Parser.Structs.ESSData{
       magic: magic,
@@ -122,13 +136,15 @@ defmodule ESSParser do
       global_data_table_1_offset: global_data_table_1_offset,
       global_data_table_2_offset: global_data_table_2_offset,
       change_form_offset: change_form_offset,
+      global_data_table_3_offset: global_data_table_3_offset,
       global_data_table_1_count: global_data_table_1_count,
       global_data_table_2_count: global_data_table_2_count,
       global_data_table_3_count: global_data_table_3_count,
       change_form_count: change_form_count,
       unused: unused,
       global_data_table_1: global_data_table_1,
-      global_data_table_2: global_data_table_2      
+      global_data_table_2: global_data_table_2,
+      global_data_table_3: global_data_table_3
     }
 
     # Poison.encode!(ess_data)

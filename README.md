@@ -68,7 +68,7 @@ Global Data
 ~~13. Menu Controls~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/MenuControls
 
-14. Menu Topic Manager
+~~14. Menu Topic Manager~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/MenuTopicManager
 
 15. Temp Effects
@@ -80,7 +80,7 @@ Global Data
 17. Anim Objects
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Anim_Objects
 
-18. Timer
+~~18. Timer~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Timer
 
 19. Synchronized Animations

@@ -4,13 +4,13 @@ defmodule Parser.GlobalData do
     acc
   end
 
-  def parse(
+  def parse(data, acc) do
     <<
       data_type::little-unsigned-integer-size(32),
       data_length::little-unsigned-integer-size(32),
       data_read::binary-size(data_length),
       rest :: binary
-    >>, acc) do
+    >> = data
 
     this_data = parse_global_data_by_type(data_type, data_read)
 
@@ -131,7 +131,7 @@ defmodule Parser.GlobalData do
   end
 
   defp parse_global_data_by_type(1003, data) do
-    data
+    Parser.GlobalData.Timer.parse(data)
   end
 
   defp parse_global_data_by_type(1004, data) do
