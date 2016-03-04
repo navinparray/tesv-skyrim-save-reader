@@ -99,7 +99,7 @@ defmodule Parser.GlobalData do
   end
 
   defp parse_global_data_by_type(110, data) do
-    data
+    Parser.GlobalData.PlayerControls.parse(data)
   end
 
   defp parse_global_data_by_type(111, data) do

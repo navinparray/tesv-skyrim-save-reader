@@ -56,10 +56,10 @@ Global Data
 ~~8. StoryTeller~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/StoryTeller
 
-9. Magic Favorites
+~~9. Magic Favorites~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Magic_Favorites
 
-10. Player Controls
+~~10. Player Controls~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/PlayerControls
 
 11. Story Event Manager
