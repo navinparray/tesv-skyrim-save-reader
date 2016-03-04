@@ -77,7 +77,7 @@ Global Data
 16. Papyrus
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Papyrus
 
-17. Anim Objects
+~~17. Anim Objects~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Anim_Objects
 
 ~~18. Timer~~

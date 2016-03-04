@@ -127,7 +127,7 @@ defmodule Parser.GlobalData do
   end
 
   defp parse_global_data_by_type(1002, data) do
-    data
+    Parser.GlobalData.AnimObjects.parse(data)
   end
 
   defp parse_global_data_by_type(1003, data) do
