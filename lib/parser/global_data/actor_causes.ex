@@ -27,7 +27,7 @@ defmodule Parser.GlobalData.ActorCauses do
       rest::binary
     >> = data
 
-    [count_0, rest1] = ParserUtils.read_vs_val(count_0_byte, rest)
+    [count_0, rest1] = Parser.Utils.read_vs_val(count_0_byte, rest)
     unknown_1 = read_unknown0_structure(count_0, rest1)
 
     [

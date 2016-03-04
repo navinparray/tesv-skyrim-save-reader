@@ -87,7 +87,7 @@ defmodule Parser.GlobalData do
   end
 
   defp parse_global_data_by_type(107, data) do
-    data
+    Parser.GlobalData.QuestStaticData.parse(data)
   end
 
   defp parse_global_data_by_type(108, data) do

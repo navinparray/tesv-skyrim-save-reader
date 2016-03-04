@@ -1,6 +1,6 @@
 defmodule Parser.GlobalData.TES do
   @moduledoc """
-    parse data for TES section of the global data 
+    parse data for TES section of the global data
 
     format of section is taken from here - http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/TES
 
@@ -15,7 +15,7 @@ defmodule Parser.GlobalData.TES do
 
 
     Format for Unknown0 structure (5 bytes)
-  
+
     form_id     RefId
     unknown     uint16
 
@@ -35,7 +35,7 @@ defmodule Parser.GlobalData.TES do
       rest1::binary
     >> = data
 
-    [unknown1_count, rest2] = ParserUtils.read_vs_val(count1, rest1)
+    [unknown1_count, rest2] = Parser.Utils.read_vs_val(count1, rest1)
 
 
     # calculate size of next data section
@@ -57,7 +57,7 @@ defmodule Parser.GlobalData.TES do
     >> = rest3
 
 
-    [unknown2_count, rest5] = ParserUtils.read_vs_val(count2, rest4)
+    [unknown2_count, rest5] = Parser.Utils.read_vs_val(count2, rest4)
 
     # calculate size of next data section
     unknown2_size = count2 * 3
@@ -78,7 +78,7 @@ defmodule Parser.GlobalData.TES do
     >> = rest6
 
 
-    unknown3_count = ParserUtils.read_vs_val(count3, rest7)
+    unknown3_count = Parser.Utils.read_vs_val(count3, rest7)
 
     # calculate size of next data section
     unknown3_size = count3 * 3
@@ -90,21 +90,21 @@ defmodule Parser.GlobalData.TES do
     >> = rest7
 
     # parse next data section
-    unknown3_data = extract_unknown(unknown3_bin_data)  
+    unknown3_data = extract_unknown(unknown3_bin_data)
 
     [
       count_1: unknown1_count,
-      unknown_1: unknown1_data,     
+      unknown_1: unknown1_data,
       count_2: unknown2_count,
-      unknown_2: unknown2_data,     
+      unknown_2: unknown2_data,
       count_3: unknown3_count,
       unknown_3: unknown3_data
-    ] 
+    ]
     # [
     #   count_1: count1,
-    #   unknown_1: unknown1_data,     
+    #   unknown_1: unknown1_data,
     #   rest3: rest3
-    # ] 
+    # ]
 
   end
 
@@ -140,7 +140,7 @@ defmodule Parser.GlobalData.TES do
     extract_unknown_data(rest, acc ++ [[
       ref_id: ref_id
     ]])
-  end 
+  end
 
   defp extract_unknown(data) do
     extract_unknown_data(data, [])

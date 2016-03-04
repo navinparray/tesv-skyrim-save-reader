@@ -4,7 +4,7 @@ defmodule Parser.GlobalData.Effects do
 
 		format of section is taken from here http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Effects
 	"""
-	
+
 	def parse(data) do
 
 		# extract the first byte which contains a count of type vsval
@@ -13,7 +13,7 @@ defmodule Parser.GlobalData.Effects do
 			rest::binary
 		>> = data
 
-		[image_spacemodifier_count, image_spacemodifiers_data] = ParserUtils.read_vs_val(count, rest)
+		[image_spacemodifier_count, image_spacemodifiers_data] = Parser.Utils.read_vs_val(count, rest)
 
 
 		# 'image_spacemodifiers_data' now contains a listing of 'count' effects and two unknown fields of type float
@@ -43,11 +43,11 @@ defmodule Parser.GlobalData.Effects do
 			unknown (uint32)
 			effect RefId (uint8 * 3)
 	"""
-	
+
 	@spec extract_effects(binary()) :: []
 
 	defp extract_effects(data) do
-		
+
 		parse_effects(data, [])
 	end
 

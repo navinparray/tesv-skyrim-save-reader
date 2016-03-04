@@ -6,7 +6,7 @@ defmodule Parser.GlobalData.Audio do
 	      rest::binary
 	    >> = data
 
-	    [tracks_count, rest_data] = ParserUtils.read_vs_val(track_count_vs_val, rest)
+	    [tracks_count, rest_data] = Parser.Utils.read_vs_val(track_count_vs_val, rest)
 
 	    track_count_size = tracks_count * 3
 	    <<
@@ -19,6 +19,6 @@ defmodule Parser.GlobalData.Audio do
 	      tracks_count: tracks_count,
 	      tracks: tracks,
 	      background_music: background_music
-	    ]		
+	    ]
 	end
 end

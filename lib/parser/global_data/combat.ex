@@ -179,7 +179,7 @@ defmodule Parser.GlobalData.Combat do
       rest::binary
     >> = data
 
-    [count_0, rest1] = ParserUtils.read_vs_val(count_0_byte, rest)
+    [count_0, rest1] = Parser.Utils.read_vs_val(count_0_byte, rest)
 
     [unknown_1, rest2] = read_unknown0_structure(count_0, rest1)
 
@@ -214,7 +214,7 @@ defmodule Parser.GlobalData.Combat do
       rest::binary
     >> = data
 
-    [count_0, rest1] = ParserUtils.read_vs_val(count_0_byte, rest)
+    [count_0, rest1] = Parser.Utils.read_vs_val(count_0_byte, rest)
 
 
 
