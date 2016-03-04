@@ -62,7 +62,7 @@ Global Data
 ~~11. Story Event Manager~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Story_Event_Manager
 
-12. Ingredient Shared
+~~12. Ingredient Shared~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Ingredient_Shared
 
 13. Menu Controls
