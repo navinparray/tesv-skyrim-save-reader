@@ -65,7 +65,7 @@ Global Data
 ~~12. Ingredient Shared~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Ingredient_Shared
 
-13. Menu Controls
+~~13. Menu Controls~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/MenuControls
 
 14. Menu Topic Manager

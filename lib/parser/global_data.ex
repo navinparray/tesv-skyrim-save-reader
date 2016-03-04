@@ -107,11 +107,11 @@ defmodule Parser.GlobalData do
   end
 
   defp parse_global_data_by_type(112, data) do
-    data
+    Parser.GlobalData.IngredientShared.parse(data)
   end
 
   defp parse_global_data_by_type(113, data) do
-    data
+    Parser.GlobalData.MenuControls.parse(data)
   end
 
   defp parse_global_data_by_type(114, data) do
