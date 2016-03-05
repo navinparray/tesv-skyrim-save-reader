@@ -71,7 +71,7 @@ Global Data
 ~~14. Menu Topic Manager~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/MenuTopicManager
 
-15. Temp Effects
+~~15. Temp Effects~~
       http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Temp_Effects
 
 16. Papyrus

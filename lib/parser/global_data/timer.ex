@@ -2,7 +2,7 @@ defmodule Parser.GlobalData.Timer do
   @moduledoc """
     parse data for timer section of global data table
 
-    format for section is taken from here - http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/MenuTopicManager
+    format for section is taken from here - http://www.uesp.net/wiki/Tes5Mod:Save_File_Format/Timer
 
     unknown0                 uint32
     unknown1                 uint32

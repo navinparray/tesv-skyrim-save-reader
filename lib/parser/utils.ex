@@ -2,6 +2,46 @@ defmodule Parser.Utils do
 
 	use Bitwise
 
+	@doc """
+		Perform a recursion on some data using an accumulator
+
+		It takes a function that will read a record and return the record and any extra data_type
+
+		ex.
+
+		data_reader = fn data ->
+			<<unknown0::little-unsigned-integer-size(32),
+				unknown1::little-unsigned-integer-size(16),
+				rest::binary
+			>> = data
+
+			record = [
+				unknown0: unknown0,
+				unknown1: unknown1
+			]
+
+			[record, rest]
+
+		end
+
+		read_structure(5, data, data_reader)
+
+	"""
+  def read_structure(count, data, fun) do
+
+    read_record(count, data, fun, [])
+  end
+
+  defp read_record(0, data, _, acc) do
+    [acc, data]
+  end
+
+  defp read_record(count, data, fun, acc) do
+    [record, rest] = fun.(data)
+
+    read_record(count - 1, rest, fun, acc ++ [record])
+  end
+
 	def read_vsval(data) do
 
 		<<byte1::little-integer-size(8),
@@ -78,6 +118,20 @@ defmodule Parser.Utils do
     end
   end
 
+	def read_uint8_list(count, data) do
+		parse_uint8_list(count, data, [])
+	end
+
+	defp parse_uint8_list(0, data, acc) do
+		[acc, data]
+	end
+
+	defp parse_uint8_list(count, data, acc) do
+		[item, rest] = read_uint8(data)
+
+		parse_uint8_list(count - 1, rest, acc ++ [item])
+	end
+
 	def read_uint8(data) do
 		read_uint8_data(data)
 	end
@@ -87,9 +141,23 @@ defmodule Parser.Utils do
 	end
 
 	defp read_uint8_data(
-	<<value::little-unsigned-integer-size(8),
+		<<value::little-unsigned-integer-size(8),
 		rest::binary>>) do
 		[value, rest]
+	end
+
+	def read_uint16_list(count, data) do
+		parse_uint16_list(count, data, [])
+	end
+
+	defp parse_uint16_list(0, data, acc) do
+		[acc, data]
+	end
+
+	defp parse_uint16_list(count, data, acc) do
+		[item, rest] = read_uint16(data)
+
+		parse_uint16_list(count - 1, rest, acc ++ [item])
 	end
 
 	def read_uint16(data) do
@@ -101,9 +169,23 @@ defmodule Parser.Utils do
 	end
 
 	defp read_uint16_data(
-	<<value::little-unsigned-integer-size(16),
+		<<value::little-unsigned-integer-size(16),
 		rest::binary>>) do
 		[value, rest]
+	end
+
+	def read_uint32_list(count, data) do
+		parse_uint32_list(count, data, [])
+	end
+
+	defp parse_uint32_list(0, data, acc) do
+		[acc, data]
+	end
+
+	defp parse_uint32_list(count, data, acc) do
+		[item, rest] = read_uint32(data)
+
+		parse_uint32_list(count - 1, rest, acc ++ [item])
 	end
 
 	def read_uint32(data) do
@@ -115,9 +197,23 @@ defmodule Parser.Utils do
 	end
 
 	defp read_uint32_data(
-	<<value::little-unsigned-integer-size(32),
+		<<value::little-unsigned-integer-size(32),
 		rest::binary>>) do
 		[value, rest]
+	end
+
+	def read_float_list(count, data) do
+		parse_float_list(count, data, [])
+	end
+
+	defp parse_float_list(0, data, acc) do
+		[acc, data]
+	end
+
+	defp parse_float_list(count, data, acc) do
+		[item, rest] = read_float(data)
+
+		parse_float_list(count - 1, rest, acc ++ [item])
 	end
 
 	def read_float(data) do
@@ -129,7 +225,7 @@ defmodule Parser.Utils do
 	end
 
 	defp read_float_data(
-	<<value::little-float-size(32),
+		<<value::little-float-size(32),
 		rest::binary>>) do
 		[value, rest]
 	end
@@ -163,4 +259,13 @@ defmodule Parser.Utils do
 
     parse_refid_list(count - 1, rest, acc ++ [unknown])
   end
+
+	def read_wstring(data) do
+		<<wstring_size :: little-unsigned-integer-size(16),
+      wstring :: binary-size(wstring_size),
+			rest::binary
+		>> = data
+
+		[wstring, rest]
+	end
 end
