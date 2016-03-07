@@ -20,13 +20,14 @@ defmodule Parser.GlobalData.Papyrus do
     [reference, rest8] = read_reference_structure(reference_count, rest7)
     [array_info_count, rest9] = Parser.Utils.read_uint32(rest8)
     [array_info, rest10] = read_array_info_structure(array_info_count, rest9)
+
     [papyrus_runtime, rest11] = Parser.Utils.read_uint32(rest10)
     [active_script_count, rest12] = Parser.Utils.read_uint32(rest11)
     [active_script, rest13] = read_active_script_structure(active_script_count, rest12)
     [script_data, rest14] = read_script_data_structure(script_instance_count, rest13)
 
-    # [reference_data, rest14] = read_reference_data_structure(reference_count, rest13)
-    # [array_data, rest15] = read_array_data_structure(array_info_count, rest14)
+    [reference_data, rest15] = read_reference_data_structure(reference_count, rest14)
+    [array_data, rest16] = read_array_data_structure(array_info_count, rest15)
     # [active_script_data, rest16] = read_active_script_Data_structure(active_script_count, rest15)
     # [function_message_count, rest17] = Parser.Utils.read_uint32(rest16)
     # [function_messages, rest18] = read_function_message_structure(function_message_count, rest17)
@@ -112,10 +113,12 @@ defmodule Parser.GlobalData.Papyrus do
       papyrus_runtime: papyrus_runtime,
       active_script_count: active_script_count,
       active_script: active_script,
-      script_data: script_data
+      script_data: script_data,
+      reference_data: reference_data,
+      arryay_data: array_data
     ]
 
-    [record, rest14]
+    [record, rest16]
   end
 
   defp read_scripts_structure(count, data) do
@@ -127,12 +130,12 @@ defmodule Parser.GlobalData.Papyrus do
       [member_data, rest3] = read_member_data_structure(member_count, rest2)
 
       
-      record = [
+      record = %Parser.Structs.GlobalData.Script{
         script_name: script_name,
-        type: type,
+        script_type: type,
         member_count: member_count,
         member_data: member_data
-      ]
+      }
 
       [record, rest3]
     end
@@ -150,10 +153,10 @@ defmodule Parser.GlobalData.Papyrus do
       [member_name, rest0] = Parser.Utils.read_uint16(data)
       [member_type, rest1] = Parser.Utils.read_uint16(rest0)
 
-      record = [
+      record = %Parser.Structs.GlobalData.MemberData{
         member_name: member_name,
         member_type: member_type
-      ]
+      }
 
       [record, rest1]
     end
@@ -177,14 +180,14 @@ defmodule Parser.GlobalData.Papyrus do
         [ref_id, rest4] = Parser.Utils.read_refid(rest3)
         [unknown1, rest5] = Parser.Utils.read_uint8(rest4)
 
-        record = [
+        record = %Parser.Structs.GLobalData.ScriptInstance{
           script_id: script_id,
           script_name: script_name,
           unknown2bits: unknown2bits,
           unknown0: unknown0,
           ref_id: ref_id,
           unknown1: unknown1
-        ]
+        }
 
         [record, rest5]
       end
@@ -199,10 +202,10 @@ defmodule Parser.GlobalData.Papyrus do
         [reference_id, rest0] = Parser.Utils.read_uint32(data)
         [type, rest1] = Parser.Utils.read_uint16(rest0)
 
-        record = [
+        record = %Parser.Structs.GLobalData.References {
           reference_id: reference_id,
           type: type
-        ]
+        }
 
         [record, rest1]
       end
@@ -226,12 +229,12 @@ defmodule Parser.GlobalData.Papyrus do
         [length, rest3] = Parser.Utils.read_uint32(rest2)
 
 
-        record = [
+        record = %Parser.Structs.GlobalData.ArrayInfo{
           array_id: array_id,
           type: type,
           ref_type: ref_type,
           length: length
-        ]
+        }
 
         [record, rest3]
       end
@@ -246,10 +249,10 @@ defmodule Parser.GlobalData.Papyrus do
         [script_id, rest0] = Parser.Utils.read_uint32(data)
         [script_type, rest1] = Parser.Utils.read_uint8(rest0)
 
-        record = [
+        record = %Parser.Structs.GlobalData.ActiveScripts{
           script_id: script_id,
           script_type: script_type
-        ]
+        }
 
         [record, rest1]
       end
@@ -273,15 +276,15 @@ defmodule Parser.GlobalData.Papyrus do
         [member_count, rest6] = Parser.Utils.read_uint32(rest5)
         [variable, rest7] = read_variable_structure(member_count, rest6)
 
-        record = [
+        record = %Parser.Structs.GlobalData.ScriptData{
           script_id: script_id,
           flag: flag,
-          type: type,
+          script_type: type,
           unknown0: unknown0,
           unknown1: unknown1,
           member_count: member_count,
-          variable: variable
-        ]
+          member: variable
+        }
 
         [record, rest7]
       end
@@ -296,10 +299,10 @@ defmodule Parser.GlobalData.Papyrus do
         [type, rest0] = Parser.Utils.read_uint8(data)
         [data, rest1] = read_variable_data_structure(type, rest0)
 
-        record = [
+        record = %Parser.Structs.GlobalData.Variable{
           type: type,
           data: data
-        ]
+        }
 
         [record, rest1]
       end 
@@ -331,5 +334,40 @@ defmodule Parser.GlobalData.Papyrus do
     end
     
     [value, rest]
+  end
+
+  defp read_reference_data_structure(count, data) do
+    [reference_id, rest0] = Parser.Utils.read_uint32(data)
+    [flag, rest1] = Parser.Utils.read_uint8(rest0)
+    [type, rest2] = Parser.Utils.read_uint16(rest1)
+    [unknown0, rest3] = Parser.Utils.read_uint32(rest2)
+    [unknown1, rest4] = Parser.Utils.read_uint32(rest3)
+    [member_count, rest5] = Parser.Utils.read_uint32(rest4)
+
+    [member, rest6] = read_variable_structure(member_count, rest5)
+
+    record = %Parser.Structs.GlobalData.ReferenceData{
+      reference_id: reference_id,
+      flag: flag,
+      type: type,
+      unknown0: unknown0,
+      unknown1: unknown1,
+      member_count: member_count,
+      member: member
+    }
+
+    [record, rest6]
+  end
+
+  defp read_array_data_structure(count, data) do
+    [array_id, rest0] = Parser.Utils.read_uint32(data)
+    [data, rest1] = read_variable_structure(count, rest0)
+
+    record = %Parser.Structs.GlobalData.ArrayData{
+      array_id: array_id,
+      data: data
+    }
+
+    [record, rest1]    
   end
 end
