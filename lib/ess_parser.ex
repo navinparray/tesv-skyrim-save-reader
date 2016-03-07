@@ -147,6 +147,8 @@ defmodule ESSParser do
       global_data_table_3: global_data_table_3
     }
 
+    ess_data
+
     # Poison.encode!(ess_data)
   end
 

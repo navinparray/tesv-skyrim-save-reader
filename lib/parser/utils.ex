@@ -268,4 +268,53 @@ defmodule Parser.Utils do
 
 		[wstring, rest]
 	end
+
+	def read_wstring_list(count, data) do
+		parse_wstring_list(count, data, [])
+	end
+
+	defp parse_wstring_list(0, data, acc) do
+    [acc, data]
+  end
+
+  defp parse_wstring_list(count, data, acc) do
+    [unknown, rest] = Parser.Utils.read_wstring(data)
+
+    parse_wstring_list(count - 1, rest, acc ++ [unknown])
+  end
+
+  def read_binary(count, data) do
+    <<bin::binary-size(count),
+      rest::binary>> = data
+
+    [bin, rest]
+  end
+
+  def read_sint16_list(count, data) do
+    parse_sint16_list(count, data, [])
+  end
+
+  defp parse_sint16_list(0, data, acc) do
+    [acc, data]
+  end
+
+  defp parse_sint16_list(count, data, acc) do
+    [item, rest] = read_sint16(data)
+
+    parse_sint16_list(count - 1, rest, acc ++ [item])
+  end
+
+  def read_sint16(data) do
+    read_sint16_data(data)
+  end
+
+  defp read_sint16_data(<<value::little-integer-size(16)>>) do
+    [value, <<>>]
+  end
+
+  defp read_sint16_data(
+    <<value::little-integer-size(16),
+    rest::binary>>) do
+    [value, rest]
+  end
 end
