@@ -38,46 +38,33 @@ defmodule Parser.GlobalData.Interface do
 
   """
   def parse(data) do
-    <<
-      shown_help_msg_count::little-unsigned-integer-size(32),
-      rest::binary
-    >> = data
+    {shown_help_msg_count, rest0} = Parser.Utils.read_uint32(data)
 
-    [shown_help_msg, rest1] = read_shown_help_msg_data(shown_help_msg_count, rest)
+    {shown_help_msg, rest1} = read_shown_help_msg_data(shown_help_msg_count, rest0)
 
-    <<unknown0::little-unsigned-integer-size(8),
-      last_used_weapons_count_vs_val::little-integer-size(8),
-      rest2::binary
-    >> = rest1
-    [last_used_weapons_count, rest3] = Parser.Utils.read_vs_val(last_used_weapons_count_vs_val, rest2)
+    {unknown0, rest2} = Parser.Utils.read_uint8(rest1)
 
-    [last_used_weapons, rest4] = read_last_used_data(last_used_weapons_count, rest3)
+    {last_used_weapons_count, rest3} = Parser.Utils.read_vsval(rest2)
 
-    <<last_used_spells_count_vs_val::little-integer-size(8),
-      rest5::binary
-    >> = rest4
+    {last_used_weapons, rest4} = read_last_used_data(last_used_weapons_count, rest3)
 
-    [last_used_spells_count, rest6] = Parser.Utils.read_vs_val(last_used_spells_count_vs_val, rest5)
+    {last_used_spells_count, rest5} = Parser.Utils.read_vsval(rest4)
 
-    [last_used_spells, rest7] = read_last_used_data(last_used_spells_count, rest6)
+    {last_used_spells, rest6} = read_last_used_data(last_used_spells_count, rest5)
 
-    <<last_used_shouts_count_vs_val::little-integer-size(8),
-      rest8::binary
-    >> = rest7
 
-    [last_used_shouts_count, rest9] = Parser.Utils.read_vs_val(last_used_shouts_count_vs_val, rest8)
+    {last_used_shouts_count, rest7} = Parser.Utils.read_vsval(rest6)
 
-    [last_used_shouts, rest10] = read_last_used_data(last_used_shouts_count, rest9)
+    {last_used_shouts, rest8} = read_last_used_data(last_used_shouts_count, rest7)
 
-    <<unknown1::little-unsigned-integer-size(8),
-      rest11::binary
-    >> = rest10
+    {unknown1, rest9} = Parser.Utils.read_uint8(rest8)
 
-    [unknown0_data, rest12] = read_unknown0_structure(rest11)
+    {unknown0_data, _} = read_unknown0_structure(rest9)
 
-    [
+    %{
       shown_help_msg_count: shown_help_msg_count,
       shown_help_msg: shown_help_msg,
+      unknown0: unknown0,
       last_used_weapons_count: last_used_weapons_count,
       last_used_weapons: last_used_weapons,
       last_used_spells_count: last_used_spells_count,
@@ -86,7 +73,7 @@ defmodule Parser.GlobalData.Interface do
       last_used_shouts: last_used_shouts,
       unknown1: unknown1,
       unknown0_data: unknown0_data
-    ]
+    }
   end
 
   defp read_shown_help_msg_data(count, data) do
@@ -94,7 +81,7 @@ defmodule Parser.GlobalData.Interface do
   end
 
   defp read_shown_help_msg(0, data, acc) do
-    [acc, data]
+    {acc, data}
   end
 
   defp read_shown_help_msg(count, data, acc) do
@@ -102,7 +89,7 @@ defmodule Parser.GlobalData.Interface do
     rest::binary
     >> = data
 
-    [messages, rest_data] = read_shown_help_msg(count - 1, rest, acc ++ [message])
+    read_shown_help_msg(count - 1, rest, acc ++ [message])
   end
 
   defp read_last_used_data(count, data) do
@@ -110,7 +97,7 @@ defmodule Parser.GlobalData.Interface do
   end
 
   defp read_last_used_record(0, data, acc) do
-    [acc, data]
+    {acc, data}
   end
 
   defp read_last_used_record(count, data, acc) do
@@ -122,35 +109,27 @@ defmodule Parser.GlobalData.Interface do
   end
 
   defp read_unknown0_structure(data) do
-    <<count_1_vs_val::little-integer-size(8),
-      rest::binary
-    >> = data
+    {count1, rest0} = Parser.Utils.read_vsval(data)
 
-    [count1, rest1] = Parser.Utils.read_vs_val(count_1_vs_val, rest)
+    {unknown_data, rest2} = read_unknown0_0_data(count1, rest0, [])
 
-    [unknown_data, rest2] = read_unknown0_0_data(count1, rest1, [])
+    {count2, rest3} = Parser.Utils.read_vsval(rest2)
 
-    <<count_2_vs_val::little-integer-size(8),
-      rest3::binary
-    >> = rest2
+    {unknown1_data, rest4} = read_unknown_wstring_data(count2, rest3, [])
 
-    [count2, rest1] = Parser.Utils.read_vs_val(count_2_vs_val, rest)
-
-    [unknown1_data, rest2] = read_unknown_wstring_data(count2, rest1, [])
-
-    [
-      [
-        count1,
-        unknown_data,
-        count2,
-        unknown1_data
-      ],
-      rest2
-    ]
+    {
+      %{
+        count1: count1,
+        unknown: unknown_data,
+        count2: count2,
+        unknown: unknown1_data
+      },
+      rest4
+    }
   end
 
   defp read_unknown0_0_data(0, data, acc) do
-    [acc, data]
+    {acc, data}
   end
 
   defp read_unknown0_0_data(count, data, acc) do
@@ -165,20 +144,20 @@ defmodule Parser.GlobalData.Interface do
       rest::binary
     >> = data
 
-    record = [
+    record = %{
       unknown0: unknown0,
       unknown1: unknown1,
       unknown2: unknown2,
       unknown3: unknown3,
       unknown4: unknown4,
       unknown5: unknown5
-    ]
+    }
 
     read_unknown0_0_data(count - 1, rest, acc + [record])
   end
 
   defp read_unknown_wstring_data(0, data, acc) do
-    [acc, data]
+    {acc, data}
   end
 
   defp read_unknown_wstring_data(count, data, acc) do

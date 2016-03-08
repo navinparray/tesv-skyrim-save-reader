@@ -9,8 +9,8 @@ defmodule Parser.GlobalData.StoryTeller do
   """
 
   def parse(data) do
-    [flag, _] = Parser.Utils.read_uint8(data)
+    {flag, _} = Parser.Utils.read_uint8(data)
 
-    [flag: flag]
+    %{flag: flag}
   end
 end

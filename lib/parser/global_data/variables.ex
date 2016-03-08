@@ -7,7 +7,7 @@ defmodule Parser.GlobalData.Variables do
       rest::binary
     >> = data
     
-    [count: count, rest: parse_global_variables(rest, [])]		
+    %{count: count, rest: parse_global_variables(rest, [])}		
 	end
 
   defp parse_global_variables(<<>>, acc) do
@@ -19,6 +19,6 @@ defmodule Parser.GlobalData.Variables do
       value::little-float-size(32),
       rest::binary
     >>, acc) do
-    parse_global_variables(rest, acc++ [[form_id: Base.encode16(form_id), value: value]])
+    parse_global_variables(rest, acc++ [%{form_id: Base.encode16(form_id), value: value}])
   end	
 end

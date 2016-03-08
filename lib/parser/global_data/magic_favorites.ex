@@ -15,19 +15,19 @@ defmodule Parser.GlobalData.MagicFavorites do
   """
 
   def parse(data) do
-    [count0, rest] = Parser.Utils.read_vsval(data)
+    {count0, rest} = Parser.Utils.read_vsval(data)
 
-    [favorite_magics, rest1] = Parser.Utils.read_refid_list(count0, rest)
+    {favorite_magics, rest1} = Parser.Utils.read_refid_list(count0, rest)
 
-    [count1, rest2] = Parser.Utils.read_vsval(rest1)
+    {count1, rest2} = Parser.Utils.read_vsval(rest1)
 
-    [magic_hot_keys, _] = Parser.Utils.read_refid_list(count1, rest2)
+    {magic_hot_keys, _} = Parser.Utils.read_refid_list(count1, rest2)
 
-    [
+    %{
       count0: count0,
       favorite_magics: favorite_magics,
       count1: count1,
       magic_hot_keys: magic_hot_keys
-    ]
+    }
   end
 end

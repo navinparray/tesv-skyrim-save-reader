@@ -30,37 +30,27 @@ defmodule Parser.GlobalData.TES do
 
   def parse(data) do
     # extract the count1 data and return the rest of the data
-    <<
-      count1::little-integer-size(8),
-      rest1::binary
-    >> = data
-
-    [unknown1_count, rest2] = Parser.Utils.read_vs_val(count1, rest1)
+    {unknown1_count, rest1} = Parser.Utils.read_vsval(data)
 
 
     # calculate size of next data section
-    unknown1_size = count1 * 5
+    unknown1_size = unknown1_count * 5
 
     # extract next data section
     <<
       unknown1_bin_data::binary-size(unknown1_size),
-      rest3::binary
-    >> = rest2
+      rest2::binary
+    >> = rest1
 
     # parse next data section
     unknown1_data = extract_unknown0(unknown1_bin_data)
 
     # extract the count2 data and return the rest of the data
-    <<
-      count2::little-integer-size(8),
-      rest4::binary
-    >> = rest3
 
-
-    [unknown2_count, rest5] = Parser.Utils.read_vs_val(count2, rest4)
+    {unknown2_count, rest5} = Parser.Utils.read_vsval(rest2)
 
     # calculate size of next data section
-    unknown2_size = count2 * 3
+    unknown2_size = unknown2_count * 3
 
     # extract next data section
     <<
@@ -72,16 +62,12 @@ defmodule Parser.GlobalData.TES do
     unknown2_data = extract_unknown(unknown2_bin_data)
 
     # extract the count3 data and return the rest of the data
-    <<
-      count3::little-integer-size(8),
-      rest7::binary
-    >> = rest6
 
 
-    unknown3_count = Parser.Utils.read_vs_val(count3, rest7)
+    {unknown3_count, rest7} = Parser.Utils.read_vsval(rest6)
 
     # calculate size of next data section
-    unknown3_size = count3 * 3
+    unknown3_size = unknown3_count * 3
 
     # extract next data section
     <<
@@ -92,14 +78,14 @@ defmodule Parser.GlobalData.TES do
     # parse next data section
     unknown3_data = extract_unknown(unknown3_bin_data)
 
-    [
+    %{
       count_1: unknown1_count,
       unknown_1: unknown1_data,
       count_2: unknown2_count,
       unknown_2: unknown2_data,
       count_3: unknown3_count,
       unknown_3: unknown3_data
-    ]
+    }
     # [
     #   count_1: count1,
     #   unknown_1: unknown1_data,
@@ -118,10 +104,10 @@ defmodule Parser.GlobalData.TES do
     unknown::little-unsigned-integer-size(16),
     rest::binary
     >>, acc) do
-    extract_unknown_data(rest, acc ++ [[
+    extract_unknown_data(rest, acc ++ [%{
       form_id: form_id,
       unknown: unknown
-    ]])
+    }])
   end
 
   defp extract_unknown0(data) do
@@ -137,9 +123,9 @@ defmodule Parser.GlobalData.TES do
     ref_id::binary-size(3),
     rest::binary
     >>, acc) do
-    extract_unknown_data(rest, acc ++ [[
+    extract_unknown_data(rest, acc ++ [%{
       ref_id: ref_id
-    ]])
+    }])
   end
 
   defp extract_unknown(data) do

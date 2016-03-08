@@ -20,22 +20,18 @@ defmodule Parser.GlobalData.LocationMetaData do
   """
 
   def parse(data) do
-    <<
-      count_0_byte::little-integer-size(8),
-      rest::binary
-    >> = data
-
-    [count_0, rest1] = Parser.Utils.read_vs_val(count_0_byte, rest)
+    {count_0, rest1} = Parser.Utils.read_vsval(data)
+    
     unknown = read_unknown0_structure(count_0, rest1, [])
 
-    [
+    {
       count_0,
       unknown
-    ]
+    }
 
   end
 
-  defp read_unknown0_structure(0, data, acc) do
+  defp read_unknown0_structure(0, _, acc) do
     acc
   end
 
@@ -46,10 +42,10 @@ defmodule Parser.GlobalData.LocationMetaData do
       rest::binary
     >>  = data
 
-    record = [
+    record = %{
       unknown0: unknown0,
       unknown1: unknown1
-    ]
+    }
 
     read_unknown0_structure(count - 1, rest, acc ++ [record])
   end

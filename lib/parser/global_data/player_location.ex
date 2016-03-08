@@ -13,7 +13,8 @@ defmodule Parser.GlobalData.PlayerLocation do
       unknown::little-integer-size(8),
       _::binary
     >> = data
-    [
+    
+    %{
       next_object_id: next_object_id,
       world_space_1: world_space_1,
       coor_x: coor_x,
@@ -23,6 +24,6 @@ defmodule Parser.GlobalData.PlayerLocation do
       pos_y: pos_y,
       pos_z: pos_z,
       unknown: unknown
-    ]		
+    }		
 	end
 end

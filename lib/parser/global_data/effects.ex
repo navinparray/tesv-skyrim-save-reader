@@ -8,41 +8,34 @@ defmodule Parser.GlobalData.Effects do
 	def parse(data) do
 
 		# extract the first byte which contains a count of type vsval
-		<<
-			count::little-integer-size(8),
-			rest::binary
-		>> = data
-
-		[image_spacemodifier_count, image_spacemodifiers_data] = Parser.Utils.read_vs_val(count, rest)
-
+		{count, rest0} = Parser.Utils.read_vsval(data)
 
 		# 'image_spacemodifiers_data' now contains a listing of 'count' effects and two unknown fields of type float
 
 		# the size of each effect is 15 bytes
 		effects_data_size = count * 15
 
+		{image_spacemodifiers_effects_data, rest1} = Parser.Utils.read_binary(effects_data_size, rest0)
 
-		<<
-			image_spacemodifiers_efects_data::binary-size(effects_data_size),
-			unknown_1::little-float-size(32),
-			unknown_2::little-float-size(32)
-		>> = image_spacemodifiers_data
+		{unknown_1, rest1} = Parser.Utils.read_uint32(rest0)
+		{unknown_2, _} = Parser.Utils.read_refid(rest1)
 
-		[
+
+		%{
 			count: count,
-			image_space_modifiers: extract_effects(image_spacemodifiers_efects_data),
+			image_space_modifiers: extract_effects(image_spacemodifiers_effects_data),
 			unkwon_1: unknown_1,
 			unkwon_2: unknown_2
-		]
+		}
 	end
 
-	@doc """
-		Each effect consists of
-			strength (float)
-			timestamp (float)
-			unknown (uint32)
-			effect RefId (uint8 * 3)
-	"""
+	#
+	# Each effect consists of
+	# 	strength (float)
+	# 	timestamp (float)
+	# 	unknown (uint32)
+	# 	effect RefId (uint8 * 3)
+	#
 
 	@spec extract_effects(binary()) :: []
 
@@ -63,12 +56,12 @@ defmodule Parser.GlobalData.Effects do
 			rest::binary
 		>>, acc
 	) do
-		data_struct = [
+		data_struct = %{
 			strength: strength,
 			timestamp: timestamp,
 			unknown: unknown,
 			effect_id: effect_id
-		]
+		}
 		parse_effects(rest, acc ++ [data_struct])
 	end
 end

@@ -23,7 +23,7 @@ defmodule Parser.GlobalData.Weather do
       rest::binary
     >> = data
 
-    [
+    %{
       climate: climate,
       weather: weather,
       prev_weather: prev_weather,
@@ -43,6 +43,6 @@ defmodule Parser.GlobalData.Weather do
       unknown_8: unknown_8,
       flags: flags,
       rest: rest
-    ]		
-	end
+    }		
+  end
 end

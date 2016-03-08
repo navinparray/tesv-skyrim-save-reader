@@ -173,25 +173,20 @@ defmodule Parser.GlobalData.Combat do
   """
 
   def parse(data) do
-    <<
-      next_num::little-unsigned-integer-size(32),
-      count_0_byte::little-integer-size(8),
-      rest::binary
-    >> = data
+    {next_num, rest0} = Parser.Utils.read_uint32(data)
+    {count_0, rest1} = Parser.Utils.read_vsval(rest0)
 
-    [count_0, rest1] = Parser.Utils.read_vs_val(count_0_byte, rest)
+    {unknown_1, rest2} = read_unknown0_structure(rest1)
 
-    [unknown_1, rest2] = read_unknown0_structure(count_0, rest1)
-
-    [
+    %{
       next_num: next_num,
       count0: count_0,
       unknown_1: unknown_1,
       rest2: rest2
-    ]
+    }
   end
 
-  defp read_unknown0_structure(count, data) do
+  defp read_unknown0_structure(data) do
 
     <<
       unknown_0::little-unsigned-integer-size(32),
@@ -199,31 +194,29 @@ defmodule Parser.GlobalData.Combat do
       rest::binary
     >> = data
 
-    [unknown_data, rest1] = read_unknown0_0_structure(rest)
+    {unknown_0, rest0} = Parser.Utils.read_uint32(data)
+    {serial_num, rest1} = Parser.Utils.read_uint32(rest0)
 
-    [[
+    {unknown_data, rest1} = read_unknown0_0_structure(rest)
+
+    record = %{
       unknown_0: unknown_0,
       serial_num: serial_num,
       unknown_data: unknown_data,
-    ], rest1]
+    }
+
+    {record, rest1}
   end
 
   defp read_unknown0_0_structure(data) do
-    <<
-      count_0_byte::little-integer-size(8),
-      rest::binary
-    >> = data
+    {count_0, rest0} = Parser.Utils.read_vsval(data)
 
-    [count_0, rest1] = Parser.Utils.read_vs_val(count_0_byte, rest)
+    {unknown_0, rest1} = read_unknown0_0_0_structure(count_0, rest0)
 
-
-
-    [unknown_0, rest2] = read_unknown0_0_0_structure(count_0, rest1)
-
-    [
+    {
       unknown_0,
-      rest2
-    ]
+      rest1
+    }
 
   end
 
@@ -234,74 +227,72 @@ defmodule Parser.GlobalData.Combat do
     #  + (15 * 5) + (4 * 6)
     #  = 117
     record_size = (count * 117)
-    <<
-        unknown_data::binary-size(record_size),
-        rest::binary
-    >> = data
+
+    {unknown_data, rest0} = Parser.Utils.read_binary(record_size, data)
+
     # structure_data = read_unknown0_0_0_record(rest)
 
-    [
-        unknown0_0_0: unknown_data,
-        rest: rest
-    ]
+    {
+        unknown_data,
+        rest0
+    }
   end
 
-  defp read_unknown0_0_0_record(data) do
-    <<
-      unknown0::binary-size(24),
-      unknown1::little-unsigned-integer-size(32),
-      unknown2::little-float-size(32),
-      unknown3::little-unsigned-integer-size(16),
-      unknown4::little-unsigned-integer-size(16),
-      target::binary-size(24),
-      unknown_position_0::binary-size(15),
-      unknown_position_1::binary-size(15),
-      unknown_position_2::binary-size(15),
-      unknown_position_3::binary-size(15),
-      unknown_position_4::binary-size(15),
-      unknown5::little-float-size(32),
-      unknown6::little-float-size(32),
-      unknown7::little-float-size(32),
-      unknown8::little-float-size(32),
-      unknown9::little-float-size(32),
-      unknown10::little-float-size(32)
-    >> = data
+  # defp read_unknown0_0_0_record(data) do
+  #   <<
+  #     unknown0::binary-size(24),
+  #     unknown1::little-unsigned-integer-size(32),
+  #     unknown2::little-float-size(32),
+  #     unknown3::little-unsigned-integer-size(16),
+  #     unknown4::little-unsigned-integer-size(16),
+  #     target::binary-size(24),
+  #     unknown_position_0::binary-size(15),
+  #     unknown_position_1::binary-size(15),
+  #     unknown_position_2::binary-size(15),
+  #     unknown_position_3::binary-size(15),
+  #     unknown_position_4::binary-size(15),
+  #     unknown5::little-float-size(32),
+  #     unknown6::little-float-size(32),
+  #     unknown7::little-float-size(32),
+  #     unknown8::little-float-size(32),
+  #     unknown9::little-float-size(32),
+  #     unknown10::little-float-size(32)
+  #   >> = data
 
-    [
-      unknown0: unknown0,
-      unknown1: unknown1,
-      unknown2: unknown2,
-      unknown3: unknown3,
-      unknown4: unknown4,
-      target: target,
-      unknown_position_0: convert_to_position_record(unknown_position_0),
-      unknown_position_1: convert_to_position_record(unknown_position_1),
-      unknown_position_2: convert_to_position_record(unknown_position_2),
-      unknown_position_3: convert_to_position_record(unknown_position_3),
-      unknown_position_4: convert_to_position_record(unknown_position_4),
-      unknown5: unknown5,
-      unknown6: unknown6,
-      unknown7: unknown7,
-      unknown8: unknown8,
-      unknown9: unknown9,
-      unknown10: unknown10
-    ]
-  end
+  #   %{
+  #     unknown0: unknown0,
+  #     unknown1: unknown1,
+  #     unknown2: unknown2,
+  #     unknown3: unknown3,
+  #     unknown4: unknown4,
+  #     target: target,
+  #     unknown_position_0: convert_to_position_record(unknown_position_0),
+  #     unknown_position_1: convert_to_position_record(unknown_position_1),
+  #     unknown_position_2: convert_to_position_record(unknown_position_2),
+  #     unknown_position_3: convert_to_position_record(unknown_position_3),
+  #     unknown_position_4: convert_to_position_record(unknown_position_4),
+  #     unknown5: unknown5,
+  #     unknown6: unknown6,
+  #     unknown7: unknown7,
+  #     unknown8: unknown8,
+  #     unknown9: unknown9,
+  #     unknown10: unknown10
+  #   }
+  # end
 
-  defp convert_to_position_record(data) do
-    <<
-      x::little-float-size(32),
-      y::little-float-size(32),
-      z::little-float-size(32),
-      cell_id::binary-size(24)
-    >> = data
+  # defp convert_to_position_record(data) do
+  #   <<
+  #     x::little-float-size(32),
+  #     y::little-float-size(32),
+  #     z::little-float-size(32),
+  #     cell_id::binary-size(24)
+  #   >> = data
 
-    [
-      x: x,
-      y: y,
-      z: z,
-      cell_id: cell_id
-    ]
-
-  end
+  #   %{
+  #     x: x,
+  #     y: y,
+  #     z: z,
+  #     cell_id: cell_id
+  #   }
+  # end
 end

@@ -15,14 +15,14 @@ defmodule Parser.GlobalData.AnimObjects do
   """
 
   def parse(data) do
-    [count, rest] = Parser.Utils.read_uint32(data)
+    {count, rest} = Parser.Utils.read_uint32(data)
 
-    [objects, _] = parse_anim_objects_data(count, rest)
+    {objects, _} = parse_anim_objects_data(count, rest)
 
-    [
+    %{
       count: count,
       objects: objects
-    ]
+    }
   end
 
   defp parse_anim_objects_data(count, data) do
@@ -30,19 +30,19 @@ defmodule Parser.GlobalData.AnimObjects do
   end
 
   defp parse_anim_objects_record(0, data, acc) do
-    [acc, data]
+    {acc, data}
   end
 
   defp parse_anim_objects_record(count, data, acc) do
-    [achr, rest] = Parser.Utils.read_refid(data)
-    [anim, rest1] = Parser.Utils.read_refid(rest)
-    [unknown, rest2] = Parser.Utils.read_uint8(rest1)
+    {achr, rest} = Parser.Utils.read_refid(data)
+    {anim, rest1} = Parser.Utils.read_refid(rest)
+    {unknown, rest2} = Parser.Utils.read_uint8(rest1)
 
-    anim_object = [
+    anim_object = %{
       achr: achr,
       anim: anim,
       unknown: unknown
-    ]
+    }
     
     parse_anim_objects_record(count - 1, rest2, acc ++ [anim_object])
   end

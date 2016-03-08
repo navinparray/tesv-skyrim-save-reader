@@ -12,14 +12,14 @@ defmodule Parser.GlobalData.StoryEventManager do
 
   def parse(data) do
 
-      [unknown0, rest1] = Parser.Utils.read_uint32(data)
-      [count0, rest2] = Parser.Utils.read_vsval(rest1)
+      {unknown0, rest1} = Parser.Utils.read_uint32(data)
+      {count0, rest2} = Parser.Utils.read_vsval(rest1)
       unknown1 = rest2
 
-      [
+      %{
         unknown0: unknown0,
         count0: count0,
         unknown1: unknown1
-      ]
+      }
   end
 end

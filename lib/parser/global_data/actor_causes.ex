@@ -22,20 +22,20 @@ defmodule Parser.GlobalData.ActorCauses do
 
   def parse(data) do
 
-    [next_num, rest] = Parser.Utils.read_uint32(data)
+    {next_num, rest} = Parser.Utils.read_uint32(data)
 
-    [count_0, rest1] = Parser.Utils.read_vsval(rest)
+    {count_0, rest1} = Parser.Utils.read_vsval(rest)
 
-    unknown_1 = read_unknown0_structure(count_0, rest1)
+    unknown_1 = read_unknown0_structure(rest1)
 
-    [
+    %{
       next_num: next_num,
       count0: count_0,
       unknown_1: unknown_1
-    ]
+    }
   end
 
-  defp read_unknown0_structure(count, data) do
+  defp read_unknown0_structure(data) do
 
     read_unknown0_record(data, [])
   end
@@ -53,13 +53,13 @@ defmodule Parser.GlobalData.ActorCauses do
     rest::binary
   >>, acc) do
 
-    data_struct = [
+    data_struct = %{
       x: x,
       y: y,
       z: z,
       serial_num: serial_num,
       actor_id: actor_id
-    ]
+    }
 
     read_unknown0_record(rest, acc ++ [data_struct])
   end

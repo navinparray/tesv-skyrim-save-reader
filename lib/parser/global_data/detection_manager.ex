@@ -21,12 +21,16 @@ defmodule Parser.GlobalData.DetectionManager do
 
   def parse(data) do
 
-    [count_0, rest] = Parser.Utils.read_vsval(data)
+    {count_0, rest} = Parser.Utils.read_vsval(data)
     unknown = read_unknown0_structure(count_0, rest, [])
 
+    %{
+      count: count_0,
+      unknown: unknown
+    }
   end
 
-  defp read_unknown0_structure(0, data, acc) do
+  defp read_unknown0_structure(0, _, acc) do
     acc
   end
 
@@ -38,11 +42,11 @@ defmodule Parser.GlobalData.DetectionManager do
       rest::binary
     >>  = data
 
-    record = [
+    record = %{
       unknown0: unknown0,
       unknown1: unknown1,
       unknown2: unknown2
-    ]
+    }
 
     read_unknown0_structure(count - 1, rest, acc ++ [record])
   end

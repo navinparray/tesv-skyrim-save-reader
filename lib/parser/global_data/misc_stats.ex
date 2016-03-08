@@ -6,10 +6,10 @@ defmodule Parser.GlobalData.MiscStats do
       count::little-unsigned-integer-size(32),
       rest::binary
     >> = data
-    [
+    %{
       count: count,
       stats: parse_stats(rest, [])
-    ]
+    }
 	end
 
 
@@ -25,6 +25,13 @@ defmodule Parser.GlobalData.MiscStats do
       value::little-integer-size(32),
       rest::binary
     >>, acc) do
-    parse_stats(rest, acc ++ [[name: name,category: category,value: value]])
+
+    record = %{
+      name: name,
+      category: category,
+      value: value
+    }
+
+    parse_stats(rest, acc ++ [record])
   end   	
 end

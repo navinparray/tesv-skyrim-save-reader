@@ -12,7 +12,7 @@ defmodule Parser.GlobalData.CreatedObjects do
         poison_count :: little-integer-size(16),
         poison_table :: binary-size(poison_count)      
       >> ->
-      [
+      %{
         weapon_count: weapon_count,
         weapon_ench_table: weapon_ench_table,
         armour_count: armour_count,
@@ -21,9 +21,9 @@ defmodule Parser.GlobalData.CreatedObjects do
         potion_table: potion_table,
         poison_count: poison_count,
         poison_table: poison_table
-      ]
+      }
        _ ->
-        [
+        %{
           weapon_count: 0,
           weapon_ench_table: [],
           armour_count: 0,
@@ -32,7 +32,7 @@ defmodule Parser.GlobalData.CreatedObjects do
           potion_table: [],
           poison_count: 0,
           poison_table: []
-        ]  
+        }  
       end   		
 	end
 end

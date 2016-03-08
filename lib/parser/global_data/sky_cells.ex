@@ -1,16 +1,12 @@
 defmodule Parser.GlobalData.SkyCells do
 
 	def parse(data) do
-    <<
-      count::little-integer-size(8),
-      rest::binary
-    >> = data
-
-    [sky_cell_count, rest_data] = Parser.Utils.read_vs_val(count, rest)
-    [
+    {sky_cell_count, rest0} = Parser.Utils.read_vsval(data)
+    
+    %{
       count: sky_cell_count,
-      rest: parse_sky_cell_data(rest_data, [])
-    ]
+      rest: parse_sky_cell_data(rest0, [])
+    }
 	end
 
   defp parse_sky_cell_data(<<>>, acc) do
@@ -24,6 +20,11 @@ defmodule Parser.GlobalData.SkyCells do
       rest::binary
     >> = data
 
-    parse_sky_cell_data(rest, acc ++ [[unknown1: unknown1, unknown2: unknown2]])
+    record = %{
+      unknown1: unknown1, 
+      unknown2: unknown2
+    }
+
+    parse_sky_cell_data(rest, acc ++ [record])
   end
 end

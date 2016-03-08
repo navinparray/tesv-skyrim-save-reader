@@ -50,33 +50,33 @@ defmodule Parser.GlobalData.QuestStaticData do
   """
 
   def parse(data) do
-    [count_0, rest] = Parser.Utils.read_uint32(data)
+    {count_0, rest} = Parser.Utils.read_uint32(data)
 
-    [unknown_0, rest1] = parse_quest_run_data_3(count_0, rest)
+    {unknown_0, rest1} = parse_quest_run_data_3(count_0, rest)
 
-    [count_1, rest2] = Parser.Utils.read_uint32(rest1)
+    {count_1, rest2} = Parser.Utils.read_uint32(rest1)
 
-    [unknown_1, rest3] = parse_quest_run_data_3(count_1, rest2)
+    {unknown_1, rest3} = parse_quest_run_data_3(count_1, rest2)
 
-    [count_2, rest4] = Parser.Utils.read_uint32(rest3)
+    {count_2, rest4} = Parser.Utils.read_uint32(rest3)
 
-    [unknown_2, rest5] = Parser.Utils.read_refid_list(count_2, rest4)
+    {unknown_2, rest5} = Parser.Utils.read_refid_list(count_2, rest4)
 
-    [count_3, rest6] = Parser.Utils.read_uint32(rest5)
+    {count_3, rest6} = Parser.Utils.read_uint32(rest5)
 
-    [unknown_3, rest7] = Parser.Utils.read_refid_list(count_3, rest6)
+    {unknown_3, rest7} = Parser.Utils.read_refid_list(count_3, rest6)
 
-    [count_4, rest8] = Parser.Utils.read_uint32(rest7)
+    {count_4, rest8} = Parser.Utils.read_uint32(rest7)
 
-    [unknown_4, rest9] = Parser.Utils.read_refid_list(count_4, rest8)
+    {unknown_4, rest9} = Parser.Utils.read_refid_list(count_4, rest8)
 
-    [count_5, rest10] = Parser.Utils.read_vsval(rest9)
+    {count_5, rest10} = Parser.Utils.read_vsval(rest9)
 
-    [unknown_5, rest11] = parse_unknown0_data(count_5, rest10)
+    {unknown_5, rest11} = parse_unknown0_data(count_5, rest10)
 
-    [unknown6, _] = Parser.Utils.read_uint8(rest11)
+    {unknown6, _} = Parser.Utils.read_uint8(rest11)
 
-    [
+    %{
       count_0: count_0,
       unknown0: unknown_0,
       count_1: count_1,
@@ -90,23 +90,29 @@ defmodule Parser.GlobalData.QuestStaticData do
       count_5: count_5,
       unknown_5: unknown_5,
       unknown6: unknown6
-    ]
+    }
   end
 
   defp parse_unknown0_data(count, data) do
-    [unknown_0_record, rest] = read_unknown0_record(count, data, [])
+    read_unknown0_record(count, data, [])
   end
 
   defp read_unknown0_record(0, data, acc) do
-    [acc, data]
+    {acc, data}
   end
 
   defp read_unknown0_record(count, data, acc) do
-    [unknown0_0, rest] = Parse.Utils.read_refid(data)
-    [count, rest1] = Parse.Utils.read_vsval(rest)
-    [unknown1, rest2] = read_unknown1_list(count, rest1)
+    {unknown0_0, rest} = Parse.Utils.read_refid(data)
+    {count_0, rest1} = Parse.Utils.read_vsval(rest)
+    {unknown1, rest2} = read_unknown1_list(count_0, rest1)
 
-    read_unknown0_record(count - 1, rest2, acc ++ [unknown1])
+    record = %{
+      unknown0_0: unknown0_0,
+      count: count_0,
+      unknown1: unknown1
+    }
+
+    read_unknown0_record(count - 1, rest2, acc ++ [record])
   end
 
   defp read_unknown1_list(count, data) do
@@ -114,14 +120,19 @@ defmodule Parser.GlobalData.QuestStaticData do
   end
 
   defp read_unknown1_record(0, data, acc) do
-    [acc, data]
+    {acc, data}
   end
 
   defp read_unknown1_record(count, data, acc) do
-    [unknown1_0, rest] = Parse.Utils.read_uint32(data)
-    [unknown1_2, rest1] = Parse.Utils.read_uint32(rest)
+    {unknown1_0, rest} = Parse.Utils.read_uint32(data)
+    {unknown1_2, rest1} = Parse.Utils.read_uint32(rest)
 
-    read_unknown1_record(count - 1, rest1, acc ++ [uknown1_0: unknown1_0, unknown1_2: unknown1_2])
+    record = %{
+      uknown1_0: unknown1_0, 
+      unknown1_2: unknown1_2
+    }
+
+    read_unknown1_record(count - 1, rest1, acc ++ [record])
   end
 
   defp parse_quest_run_data_3(count, data) do
@@ -129,21 +140,27 @@ defmodule Parser.GlobalData.QuestStaticData do
   end
 
   defp parse_quest_run_data_3_record(0, data, acc) do
-    [acc, data]
+    {acc, data}
   end
 
   defp parse_quest_run_data_3_record(count, data, acc) do
     <<unknown1::little-unsigned-integer-size(32),
       unknown2::little-unsigned-integer-size(32),
-      count::little-unsigned-integer-size(32),
+      count0::little-unsigned-integer-size(32),
       rest::binary
     >> = data
 
-    [quest_run_data_3_item_records, rest1] = parse_quest_run_3_data_records(count, rest, acc ++ [unknown1: unknown1, unknown2: unknown2, count: count])
+    record = %{
+      unknown1: unknown1, 
+      unknown2: unknown2, 
+      count: count0
+    }
+
+    parse_quest_run_3_data_records(count - 1, rest, acc ++ [record])
   end
 
   defp parse_quest_run_3_data_records(0, data, acc) do
-    [acc, data]
+    {acc, data}
   end
 
   defp parse_quest_run_3_data_records(count, data, acc) do
@@ -152,32 +169,37 @@ defmodule Parser.GlobalData.QuestStaticData do
       rest::binary
     >> = data
 
-    [unknown, rest1] = parse_unknown_data(type, rest)
+    {unknown, rest1} = parse_unknown_data(type, rest)
 
-    parse_quest_run_3_data_records(count - 1, rest1, acc ++ [type, unknown])
+    record = %{
+      type: type, 
+      unknown: unknown
+    }
+
+    parse_quest_run_3_data_records(count - 1, rest1, acc ++ [record])
   end
 
-  @doc """
-    The type is 3, therefore it is a uint32
-  """
+  #
+  #   The type is 3, therefore it is a uint32
+  #
 
   defp parse_unknown_data(3, data) do
     <<unknown::little-unsigned-integer-size(32),
       rest::binary
     >> = data
 
-    [unknown, rest]
+    {unknown, rest}
   end
 
-  @doc """
-    The type id either 1,2 or 4 therefore it is a RefId
-  """
+  #
+  #   The type id either 1,2 or 4 therefore it is a RefId
+  #
 
-  defp parse_unknown_data(type, data) do
+  defp parse_unknown_data(_, data) do
     <<unknown::binary-size(3),
       rest::binary
     >> = data
 
-    [unknown, rest]
+    {unknown, rest}
   end
 end

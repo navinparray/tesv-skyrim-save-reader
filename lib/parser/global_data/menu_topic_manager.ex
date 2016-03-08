@@ -9,12 +9,12 @@ defmodule Parser.GlobalData.MenuTopicManager do
   """
 
   def parse(data) do
-    [unknown0, rest] = Parser.Utils.read_refid(data)
-    [unknown1, _] = Parser.Utils.read_refid(rest)
+    {unknown0, rest} = Parser.Utils.read_refid(data)
+    {unknown1, _} = Parser.Utils.read_refid(rest)
 
-    [
+    %{
       unknown0: unknown0,
       unknown1: unknown1
-    ]
+    }
   end
 end
