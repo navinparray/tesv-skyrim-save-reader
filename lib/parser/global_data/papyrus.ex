@@ -117,7 +117,7 @@ defmodule Parser.GlobalData.Papyrus do
       reference_data: reference_data,
       arryay_data: array_data
     }
-
+    # Parser.Utils.write_to_file(script_instance)
     {record, data}
   end
 
@@ -337,26 +337,32 @@ defmodule Parser.GlobalData.Papyrus do
   end
 
   defp read_reference_data_structure(count, data) do
-    {reference_id, rest0} = Parser.Utils.read_uint32(data)
-    {flag, rest1} = Parser.Utils.read_uint8(rest0)
-    {type, rest2} = Parser.Utils.read_uint16(rest1)
-    {unknown0, rest3} = Parser.Utils.read_uint32(rest2)
-    {unknown1, rest4} = Parser.Utils.read_uint32(rest3)
-    {member_count, rest5} = Parser.Utils.read_uint32(rest4)
+    Parser.Utils.read_structure(
+      count,
+      data,
+      fn(data) ->
+        {reference_id, rest0} = Parser.Utils.read_uint32(data)
+        {flag, rest1} = Parser.Utils.read_uint8(rest0)
+        {type, rest2} = Parser.Utils.read_uint16(rest1)
+        {unknown0, rest3} = Parser.Utils.read_uint32(rest2)
+        {unknown1, rest4} = Parser.Utils.read_uint32(rest3)
+        {member_count, rest5} = Parser.Utils.read_uint32(rest4)
 
-    {member, rest6} = read_variable_structure(member_count, rest5)
+        {member, rest6} = read_variable_structure(member_count, rest5)
 
-    record = %Parser.Structs.GlobalData.ReferenceData{
-      reference_id: reference_id,
-      flag: flag,
-      type: type,
-      unknown0: unknown0,
-      unknown1: unknown1,
-      member_count: member_count,
-      member: member
-    }
+        record = %Parser.Structs.GlobalData.ReferenceData{
+          reference_id: reference_id,
+          flag: flag,
+          type: type,
+          unknown0: unknown0,
+          unknown1: unknown1,
+          member_count: member_count,
+          member: member
+        }
 
-    {record, rest6}
+        {record, rest6}
+      end
+    )
   end
 
   defp read_array_data_structure(count, data) do
@@ -374,13 +380,129 @@ defmodule Parser.GlobalData.Papyrus do
   #
   # read the ActiveScriptData structure
   #
-  # defp read_active_script_Data_structure(count, data) do
-  #   {script_id, rest0} = Parser.Utils.read_uint32(data)
-  #   {major_version, rest1} = Parser.Utils.read_uint8(rest0)
-  #   {minor_version, rest2} = Parser.Utils.read_uint8(rest1)
-  #
-  #   {unknown0, rest3} = read_variable_structure(1, rest2)
-  #
-  #   {flag, rest4} = Parser.Utils.read_uint8(rest3)
-  # end
+
+  defp read_active_script_data_structure(count, data) do
+
+    Parser.Utils.read_structure(
+      count,
+      data,
+      fn(data) ->
+        {script_id, rest0} = Parser.Utils.read_uint32(data)
+        {major_version, rest1} = Parser.Utils.read_uint8(rest0)
+        {minor_version, rest2} = Parser.Utils.read_uint8(rest1)
+
+        {unknown0, rest3} = read_variable_structure(1, rest2)
+
+        {flag, rest4} = Parser.Utils.read_uint8(rest3)
+        {unknown_byte, rest5} = Parser.Utils.read_uint8(rest4)
+        {unknown2, rest6} = Parser.Utils.read_uint32(rest5)
+        {unknown3, rest7} = Parser.Utils.read_uint8(rest6)
+
+        {unknown4, rest8} = read_active_script_data_unknown4(rest7, unknown3)
+
+        {stack_frame_count, rest9} = Parser.Utils.read_uint32(rest8)
+        {stack_frame, rest10} = read_stack_frame_structure(stack_frame_count, rest9)
+        {unknown5, _} = Parser.Utils.read_uint8(rest10)
+
+        record = %Parser.Structs.GlobalData.ActiveScriptData{
+          script_id: script_id,
+          major_version: major_version,
+          minor_version: minor_version,
+          variable: unknown0,
+          flag: flag,
+          unknown_byte: unknown_byte,
+          unknown2: unknown2,
+          unknown3: unknown3,
+          unknown4: unknown4,
+          stack_frame_count: stack_frame_count,
+          stack_frame: stack_frame,
+          unknown5: unknown5
+        }
+
+        {record, rest1}
+      end
+    )
+  end
+
+  defp read_active_script_data_unknown4(data, 1) do
+    {r1, rest0} = Parser.Utils.read_uint32(data)
+    {r2, rest1} = Parser.Utils.read_binary(r1, rest0)
+
+    {fields, rest2} = case r2 do
+      "QuestStage" -> fn ->
+          {v1, resta} = Parser.Utils.read_refid(rest1)
+          {v2, restb} = Parser.Utils.read_uin16(resta)
+          {v3, restc} = Parser.Utils.read_uint8(restb)
+          record = %{
+            ref_id: v1,
+            string_table_ref: v2,
+            unknown: v3
+          }
+
+          {record, restc}
+      end
+      "ScenePhaseResults" -> fn ->
+        {v1, resta} = Parser.Utils.read_refid(rest1)
+        {v2, restb} = Parser.Utils.read_uin32(resta)
+        record = %{
+          ref_id: v1,
+          unknown: v2
+        }
+
+        {record, restb}
+      end
+      "SceneActionResults" -> fn ->
+        {v1, resta} = Parser.Utils.read_refid(rest1)
+        {v2, restb} = Parser.Utils.read_uin32(resta)
+        record = %{
+          ref_id: v1,
+          unknown: v2
+        }
+
+        {record, restb}
+      end
+      "SceneResults" -> fn ->
+        {v1, resta} = Parser.Utils.read_refid(rest1)
+        record = %{
+          ref_id: v1
+        }
+
+        {record, resta}
+      end
+    end
+
+    record = %{
+      count: r1,
+      string_data: r2,
+      other_data: fields
+    }
+
+    {record, rest2}
+  end
+
+  defp read_active_script_data_unknown4(data, 2) do
+    {record, rest0} = read_variable_structure(1, data)
+  end
+
+  defp read_active_script_data_unknown4(data, 3) do
+    {record, rest0} = read_active_script_data_unknown4(1, data)
+    {record1, rest1} = read_variable_structure(1, rest0)
+
+    full_recod_data = %{
+      count: recod.count,
+      string_data: record.string_data,
+      other_data: record.other_data,
+      variable_data: record1
+    }
+
+    {full_recod_data, rest1}
+  end
+
+  defp read_active_script_data_unknown4(data, _) do
+    {[], data}
+  end
+
+  defp read_stack_frame_structure(count, data) do
+    data
+  end
 end

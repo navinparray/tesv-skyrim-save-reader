@@ -27,6 +27,13 @@ defmodule Parser.Utils do
 		read_structure(5, data, data_reader)
 
 	"""
+
+	def write_to_file(contents) do
+		{:ok, file} = File.open "hello", [:write]
+		IO.binwrite file, Poison.encode!(contents)
+		File.close file
+	end
+
   def read_structure(count, data, fun) do
 
     read_record(count, data, fun, [])
@@ -54,7 +61,7 @@ defmodule Parser.Utils do
     {item, rest} = read_vsval(data)
 
     parse_vsval_list(count - 1, rest, acc ++ [item])
-  end  
+  end
 
 	def read_vsval(data) do
 

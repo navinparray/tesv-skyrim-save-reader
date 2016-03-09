@@ -16,7 +16,9 @@ defmodule ESSParser do
 
     case result do
       :ok ->
-        IO.inspect parse_binary(content)
+        # IO.inspect parse_binary(content)
+        parse_binary(content)
+        IO.inspect {:ok}
       _ ->
         IO.puts content
     end
@@ -147,9 +149,7 @@ defmodule ESSParser do
       global_data_table_3: global_data_table_3
     }
 
-    IO.inspect ess_data.global_data_table_3
-    {:ok}
-    # Poison.encode!(ess_data)
+    # Parser.Utils.write_to_file(global_data_table_3)
   end
 
   defp get_file_contents(file_name) do

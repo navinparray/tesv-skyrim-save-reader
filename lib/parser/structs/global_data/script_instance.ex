@@ -1,5 +1,5 @@
 defmodule Parser.Structs.GLobalData.ScriptInstance do
-  @derive [Poison.Encoder]
+  @derive {Poison.Encoder, except: [:ref_id]}
 
   defstruct [
     script_id: 0,
