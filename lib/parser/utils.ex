@@ -29,9 +29,13 @@ defmodule Parser.Utils do
 	"""
 
 	def write_to_file(contents) do
-		{:ok, file} = File.open "hello", [:write]
+		{:ok, file} = File.open "tempoutput.tmp", [:write]
 		IO.binwrite file, Poison.encode!(contents)
 		File.close file
+	end
+
+	def convert_to_list(data) do
+		for (<<c::unsigned-integer-size(8) <- data>>), do: c
 	end
 
   def read_structure(count, data, fun) do
@@ -256,7 +260,11 @@ defmodule Parser.Utils do
 	end
 
 	defp read_refid_data(<<refid::binary-size(3)>>) do
-		{refid, <<>>}
+
+		{
+			convert_to_list(refid),
+			<<>>
+		}
 	end
 
 	defp read_refid_data(data) do
@@ -264,7 +272,10 @@ defmodule Parser.Utils do
 			rest::binary
 		>> = data
 
-		{refid, rest}
+		{
+			convert_to_list(refid),
+			rest
+		}
 	end
 
 	def read_refid_list(count, data) do
@@ -308,7 +319,10 @@ defmodule Parser.Utils do
     <<bin::binary-size(count),
       rest::binary>> = data
 
-    {bin, rest}
+    {
+			bin,
+			rest
+		}
   end
 
   def read_sint16_list(count, data) do

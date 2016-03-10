@@ -28,7 +28,7 @@ defmodule Parser.GlobalData.Papyrus do
 
     {reference_data, rest15} = read_reference_data_structure(reference_count, rest14)
     {array_data, rest16} = read_array_data_structure(array_info_count, rest15)
-    # {active_script_data, rest16} = read_active_script_Data_structure(active_script_count, rest15)
+    {active_script_data, rest16} = read_active_script_data_structure(active_script_count, rest15)
     # [function_message_count, rest17] = Parser.Utils.read_uint32(rest16)
     # [function_messages, rest18] = read_function_message_structure(function_message_count, rest17)
     # [suspended_stack_count1, rest19] = Parser.Utils.read_uint32(rest18)
@@ -115,9 +115,10 @@ defmodule Parser.GlobalData.Papyrus do
       active_script: active_script,
       script_data: script_data,
       reference_data: reference_data,
-      arryay_data: array_data
+      array_data: array_data,
+      active_script_data: active_script_data
     }
-    # Parser.Utils.write_to_file(script_instance)
+    Parser.Utils.write_to_file(script_data)
     {record, data}
   end
 
@@ -333,7 +334,10 @@ defmodule Parser.GlobalData.Papyrus do
       _ -> {[], data}
     end
 
-    {value, rest}
+    {
+      Parser.Utils.convert_to_list(value),
+      rest
+    }
   end
 
   defp read_reference_data_structure(count, data) do
@@ -481,7 +485,7 @@ defmodule Parser.GlobalData.Papyrus do
   end
 
   defp read_active_script_data_unknown4(data, 2) do
-    {record, rest0} = read_variable_structure(1, data)
+    read_variable_structure(1, data)
   end
 
   defp read_active_script_data_unknown4(data, 3) do
@@ -489,7 +493,7 @@ defmodule Parser.GlobalData.Papyrus do
     {record1, rest1} = read_variable_structure(1, rest0)
 
     full_recod_data = %{
-      count: recod.count,
+      count: record.count,
       string_data: record.string_data,
       other_data: record.other_data,
       variable_data: record1
@@ -503,6 +507,6 @@ defmodule Parser.GlobalData.Papyrus do
   end
 
   defp read_stack_frame_structure(count, data) do
-    data
+    {%{}, data}
   end
 end
