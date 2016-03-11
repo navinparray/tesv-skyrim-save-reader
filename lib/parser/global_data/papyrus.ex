@@ -28,7 +28,7 @@ defmodule Parser.GlobalData.Papyrus do
 
     {reference_data, rest15} = read_reference_data_structure(reference_count, rest14)
     {array_data, rest16} = read_array_data_structure(array_info_count, rest15)
-    {active_script_data, rest16} = read_active_script_data_structure(active_script_count, rest15)
+    # {active_script_data, _rest17} = read_active_script_data_structure(active_script_count, rest16)
     # [function_message_count, rest17] = Parser.Utils.read_uint32(rest16)
     # [function_messages, rest18] = read_function_message_structure(function_message_count, rest17)
     # [suspended_stack_count1, rest19] = Parser.Utils.read_uint32(rest18)
@@ -97,7 +97,7 @@ defmodule Parser.GlobalData.Papyrus do
     # [array14, rest68] = read_array14_structure(array_count14, rest67)
     # [array_count15, rest69] = Parser.Utils.read_uint32(rest68)
     # [array15, rest70] = read_array15_structure(array_count15, rest69)
-
+    IO.inspect array_data
     record = %{
       header: header,
       str_count: str_count,
@@ -115,8 +115,8 @@ defmodule Parser.GlobalData.Papyrus do
       active_script: active_script,
       script_data: script_data,
       reference_data: reference_data,
-      array_data: array_data,
-      active_script_data: active_script_data
+      array_data: array_data
+      # active_script_data: active_script_data
     }
     Parser.Utils.write_to_file(script_data)
     {record, data}
@@ -396,7 +396,6 @@ defmodule Parser.GlobalData.Papyrus do
         {minor_version, rest2} = Parser.Utils.read_uint8(rest1)
 
         {unknown0, rest3} = read_variable_structure(1, rest2)
-
         {flag, rest4} = Parser.Utils.read_uint8(rest3)
         {unknown_byte, rest5} = Parser.Utils.read_uint8(rest4)
         {unknown2, rest6} = Parser.Utils.read_uint32(rest5)
@@ -507,6 +506,206 @@ defmodule Parser.GlobalData.Papyrus do
   end
 
   defp read_stack_frame_structure(count, data) do
-    {%{}, data}
+    Parser.Utils.read_structure(
+      count,
+      data,
+      fn(data) ->
+        {variable_count, rest0} = Parser.Utils.read_uint32(data)
+        {flag, rest1}= Parser.Utils.read_uint8(rest0)
+        {function_type, rest2} = Parser.Utils.read_uint8(rest1)
+        {script_name, rest3} = Parser.Utils.read_uint16(rest2)
+        {script_base_name, rest4} = Parser.Utils.read_uint16(rest3)
+        {event, rest5} = Parser.Utils.read_uint16(rest4)
+        {status, rest6} = Parser.Utils.read_uint16(rest5)
+        {opcode_version, rest7} = Parser.Utils.read_uint8(rest6)
+        {opcode_minor_version, rest8} = Parser.Utils.read_uint8(rest7)
+        {return_type, rest9} = Parser.Utils.read_uint16(rest8)
+        {function_docstring, rest10} = Parser.Utils.read_uint16(rest9)
+        {function_user_flags, rest11} = Parser.Utils.read_uint32(rest10)
+        {function_flags, rest12} = Parser.Utils.read_uint8(rest11)
+        {function_parameter_count, rest13} = Parser.Utils.read_uint16(rest12)
+        {function_params, rest14} = read_function_params_structure(function_parameter_count, rest13)
+        {function_locals_count, rest15} = Parser.Utils.read_uint16(rest14)
+        {function_locals, rest16} = read_function_locals_structure(function_locals_count, rest15)
+        {opcode_count, rest17} = Parser.Utils.read_uint16(rest16)
+        {opcode_data, rest18} = read_opcode_data_structure(opcode_count, rest17)
+        {unknown3, rest19} = Parser.Utils.read_uint32(rest18)
+        {unknown4, rest20} = read_variable_structure(1, rest19)
+        {unknown5, _rest21} = read_variable_structure(variable_count, rest20)
+
+        record = %Parser.Structs.GlobalData.StackFrame{
+          variable_count: variable_count,
+          flag: flag,
+          function_type: function_type,
+          script_name: script_name,
+          script_base_name: script_base_name,
+          event: event,
+          status: status,
+          opcode_version: opcode_version,
+          opcode_minor_version: opcode_minor_version,
+          return_type: return_type,
+          function_docstring: function_docstring,
+          function_user_flags: function_user_flags,
+          function_flags: function_flags,
+          function_parameter_count: function_parameter_count,
+          function_params: function_params,
+          function_locals_count: function_locals_count,
+          function_locals: function_locals,
+          opcode_count: opcode_count,
+          opcode_data: opcode_data,
+          unknown3: unknown3,
+          unknown4: unknown4,
+          unknown5: unknown5
+        }
+
+        {record, rest2}
+      end
+    )
+  end
+
+  defp read_function_params_structure(count, data) do
+    Parser.Utils.read_structure(
+      count,
+      data,
+      fn(data) ->
+
+        {param_name, rest0} = Parser.Utils.read_uint16(data)
+        {param_type, rest1} = Parser.Utils.read_uint16(rest0)
+
+        record = %Parser.Structs.GlobalData.FunctionParam{
+          param_name: param_name,
+          param_type: param_type
+        }
+
+        {record, rest1}
+      end
+    )
+  end
+
+  defp read_function_locals_structure(count, data) do
+    Parser.Utils.read_structure(
+      count,
+      data,
+      fn(data) ->
+
+        {local_name, rest0} = Parser.Utils.read_uint16(data)
+        {local_type, rest1} = Parser.Utils.read_uint16(rest0)
+
+        record = %Parser.Structs.GlobalData.FunctionLocal{
+          local_name: local_name,
+          local_type: local_type
+        }
+
+        {record, rest1}
+      end
+    )
+  end
+
+  defp read_opcode_data_structure(count, data) do
+    Parser.Utils.read_structure(
+      count,
+      data,
+      fn(data) ->
+
+        {opcode, rest0} = Parser.Utils.read_uint8(data)
+
+        opcode_base16 = Base.encode16(<<opcode>>)
+        {param, rest1} = read_opcode_parameter(opcode_base16, rest0)
+
+        record = %Parser.Structs.GlobalData.OpcodeData{
+          opcode: opcode,
+          param: param
+        }
+
+        {record, rest1}
+      end
+    )
+  end
+
+  defp read_opcode_parameter(code, data) do
+    case code do
+      0x00 -> read_opcode_params(data, [])
+      0x01 -> read_opcode_params(data, ['S', 'I', 'I'])
+      0x02 -> read_opcode_params(data, ['S', 'F', 'F'])
+      0x03 -> read_opcode_params(data, ['S', 'I', 'I'])
+      0x04 -> read_opcode_params(data, ['S', 'F', 'F'])
+      0x05 -> read_opcode_params(data, ['S', 'I', 'I'])
+      0x06 -> read_opcode_params(data, ['S', 'F', 'F'])
+      0x07 -> read_opcode_params(data, ['S', 'I', 'I'])
+      0x08 -> read_opcode_params(data, ['S', 'F', 'F'])
+      0x09 -> read_opcode_params(data, ['S', 'I', 'I'])
+      0x0a -> read_opcode_params(data, ['S', 'A'])
+      0x0b -> read_opcode_params(data, ['S', 'I'])
+      0x0c -> read_opcode_params(data, ['S', 'F'])
+      0x0d -> read_opcode_params(data, ['S', 'A'])
+      0x0e -> read_opcode_params(data, ['S', 'A'])
+      0x0f -> read_opcode_params(data, ['S', 'A', 'A'])
+      0x10 -> read_opcode_params(data, ['S', 'A', 'A'])
+      0x11 -> read_opcode_params(data, ['S', 'A', 'A'])
+      0x12 -> read_opcode_params(data, ['S', 'A', 'A'])
+      0x13 -> read_opcode_params(data, ['S', 'A', 'A'])
+      0x14 -> read_opcode_params(data, ['L'])
+      0x15 -> read_opcode_params(data, ['A', 'L'])
+      0x16 -> read_opcode_params(data, ['A', 'L'])
+      0x17 -> read_opcode_params(data, ['N', 'S', 'S', '*'])
+      0x18 -> read_opcode_params(data, ['N', 'S', '*'])
+      0x19 -> read_opcode_params(data, ['N', 'N', 'S', '*'])
+      0x1a -> read_opcode_params(data, ['A'])
+      0x1b -> read_opcode_params(data, ['S', 'Q', 'Q'])
+      0x1c -> read_opcode_params(data, ['N', 'S', 'S'])
+      0x1d -> read_opcode_params(data, ['N', 'S', 'A'])
+      0x1e -> read_opcode_params(data, ['S', 'U'])
+      0x1f -> read_opcode_params(data, ['S', 'S'])
+      0x20 -> read_opcode_params(data, ['S', 'S', 'I'])
+      0x21 -> read_opcode_params(data, ['S', 'I', 'A'])
+      0x22 -> read_opcode_params(data, ['S', 'S', 'A', 'I'])
+      0x23 -> read_opcode_params(data, ['S', 'S', 'A', 'I'])
+      0x24 -> read_opcode_params(data, [])
+    end
+  end
+
+  defp read_opcode_params(data, []) do
+  end
+
+  defp read_opcode_params(data, param_listing) do
+
+    get_params = fn (el) ->
+      case el do
+        '*' -> fn ->
+          {extra_param_count, rest0} = Parser.Utils.read_uint32(data)
+          read_parameter_structure(extra_param_count, rest0)
+        end
+        _ -> read_parameter_structure(1, data)
+      end
+    end
+    #
+    Enum.map(param_listing, get_params)
+  end
+
+  defp read_parameter_structure(count, data) do
+
+    read_parameter_record(count, data, [])
+  end
+
+  defp read_parameter_record(0, data, acc) do
+    {acc, data}
+  end
+
+  defp read_parameter_record(count, data, acc) do
+    {param_type, rest0} = Parser.Utils.read_uint8(data)
+
+    {param_data, rest1} = case param_type do
+      x when x in [1,2] -> Parser.Utils.read_uint16(rest0)
+      3 -> Parser.Utils.read_uint32(rest0)
+      4 -> Parser.Utils.read_float(rest0)
+      5 -> Parser.Utils.read_uint8(rest0)
+    end
+
+    record = %Parser.Structs.GlobalData.Parameter{
+      param_type: param_type,
+      param_data: param_data
+    }
+
+    read_parameter_record(count - 1, rest1, acc ++ [record])
   end
 end

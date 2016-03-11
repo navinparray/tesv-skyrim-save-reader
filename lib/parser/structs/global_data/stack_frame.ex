@@ -15,13 +15,13 @@ defmodule Parser.Structs.GlobalData.StackFrame do
     function_docstring: 0,
     function_user_flags: 0,
     function_flags: 0,
-    function_parameter_Count: 0,
+    function_parameter_count: 0,
     function_params: [%Parser.Structs.GlobalData.FunctionParam{}],
     function_locals_count: 0,
     function_locals: [%Parser.Structs.GlobalData.FunctionLocal{}],
     opcode_count: 0,
     opcode_data: [%Parser.Structs.GlobalData.OpcodeData{}],
-    unkown3: 0,
+    unknown3: 0,
     unknown4: %Parser.Structs.GlobalData.Variable{},
     unknown5: [%Parser.Structs.GlobalData.Variable{}]
   ]
