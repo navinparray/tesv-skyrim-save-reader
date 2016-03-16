@@ -1,12 +1,10 @@
 defmodule Parser.GlobalData.Papyrus.Script do
 
-  def read_script({data, state}) do
+  def read({data, state}) do
 
     recall = fn(data) ->
 
-      empty_state = %Parser.Structs.GlobalData.Script{}
-
-      {rest, filled_state} = read_script_name({data, empty_state})
+      {rest, filled_state} = read_script_name({data, %Parser.Structs.GlobalData.Script{}})
         |> read_script_type()
         |> read_member_count()
         |> read_member_data()
@@ -45,9 +43,7 @@ defmodule Parser.GlobalData.Papyrus.Script do
 
     recall = fn (data) ->
 
-      empty_state = %Parser.Structs.GlobalData.MemberData{}
-
-      {rest, filled_state} = read_member_name({data, empty_state})
+      {rest, filled_state} = read_member_name({data, %Parser.Structs.GlobalData.MemberData{}})
         |> read_member_type()
 
       {filled_state, rest}

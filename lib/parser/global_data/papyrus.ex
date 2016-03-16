@@ -16,7 +16,9 @@ defmodule Parser.GlobalData.Papyrus do
       |> read_str_count()
       |> read_strings()
       |> read_script_count()
-      |> Parser.GlobalData.Papyrus.Script.read_script()
+      |> Parser.GlobalData.Papyrus.Script.read()
+      |> read_script_instance_count()
+      |> Parser.GlobalData.Papyrus.ScriptInstance.read()
 
     IO.inspect filled_state
 
@@ -155,6 +157,12 @@ defmodule Parser.GlobalData.Papyrus do
     {value, rest} = Parser.Utils.read_uint32(data)
 
     { rest, %{state | script_count: value} }
+  end
+
+  defp read_script_instance_count({data, state}) do
+    {value, rest} = Parser.Utils.read_uint32(data)
+
+    { rest, %{state | script_instance_count: value} }
   end
 
 
