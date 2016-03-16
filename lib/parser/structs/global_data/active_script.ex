@@ -1,4 +1,4 @@
-defmodule Parser.Structs.GlobalData.ActiveScripts do
+defmodule Parser.Structs.GlobalData.ActiveScript do
   @derive [Poison.Encoder]
 
   defstruct [
