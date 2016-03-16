@@ -20,6 +20,7 @@ defmodule Parser.GlobalData.Papyrus do
       |> read_script_instance_count()
       |> Parser.GlobalData.Papyrus.ScriptInstance.read()
       |> read_reference_count()
+      |> Parser.GlobalData.Papyrus.Reference.read()
 
     IO.inspect filled_state
 
@@ -171,6 +172,8 @@ defmodule Parser.GlobalData.Papyrus do
 
       {rest, %{state | reference_count: value}}
   end
+
+
 
   # defp read_scripts_structure(count, data) do
   #
