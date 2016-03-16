@@ -27,8 +27,9 @@ defmodule Parser.GlobalData.Papyrus do
       |> read_active_script_count()
       |> Parser.GlobalData.Papyrus.ActiveScript.read()
       |> Parser.GlobalData.Papyrus.ScriptData.read()
+      |> Parser.GlobalData.Papyrus.ReferenceData.read()
 
-    IO.inspect filled_state.script_data
+    IO.inspect filled_state
 
   end
 
