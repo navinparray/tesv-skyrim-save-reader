@@ -19,6 +19,7 @@ defmodule Parser.GlobalData.Papyrus do
       |> Parser.GlobalData.Papyrus.Script.read()
       |> read_script_instance_count()
       |> Parser.GlobalData.Papyrus.ScriptInstance.read()
+      |> read_reference_count()
 
     IO.inspect filled_state
 
@@ -138,34 +139,38 @@ defmodule Parser.GlobalData.Papyrus do
   defp read_header({data, state}) do
     {value, rest} = Parser.Utils.read_uint16(data)
 
-    { rest, %{state | header: value} }
+    {rest, %{state | header: value} }
   end
 
   defp read_str_count({data, state}) do
     {value, rest} = Parser.Utils.read_uint16(data)
 
-    { rest, %{state | str_count: value} }
+    {rest, %{state | str_count: value} }
   end
 
   defp read_strings({data, state}) do
     {value, rest} = Parser.Utils.read_wstring_list(state.str_count, data)
 
-    { rest, %{state | strings: value} }
+    {rest, %{state | strings: value} }
   end
 
   defp read_script_count({data, state}) do
     {value, rest} = Parser.Utils.read_uint32(data)
 
-    { rest, %{state | script_count: value} }
+    {rest, %{state | script_count: value} }
   end
 
   defp read_script_instance_count({data, state}) do
     {value, rest} = Parser.Utils.read_uint32(data)
 
-    { rest, %{state | script_instance_count: value} }
+    {rest, %{state | script_instance_count: value} }
   end
 
+  defp read_reference_count({data, state}) do
+      {value, rest} = Parser.Utils.read_uint32(data)
 
+      {rest, %{state | reference_count: value}}
+  end
 
   # defp read_scripts_structure(count, data) do
   #

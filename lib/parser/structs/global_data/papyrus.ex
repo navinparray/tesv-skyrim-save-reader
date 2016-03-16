@@ -8,6 +8,7 @@ defmodule Parser.Structs.GlobalData.Papyrus do
     script_count: 0,
     script: [Parser.Structs.GlobalData.Script],
     script_instance_count: 0,
-    script_instance: [Parser.Structs.GLobalData.ScriptInstance]
+    script_instance: [Parser.Structs.GLobalData.ScriptInstance],
+    reference_count: 0
   ]
 end
