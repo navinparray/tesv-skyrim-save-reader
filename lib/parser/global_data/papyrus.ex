@@ -12,10 +12,11 @@ defmodule Parser.GlobalData.Papyrus do
 
     empty_state = %Parser.Structs.GlobalData.Papyrus{}
 
-    {rest, filled_state} = read_header({data, empty_state})
+    {_rest, filled_state} = read_header({data, empty_state})
       |> read_str_count()
       |> read_strings()
       |> read_script_count()
+      |> Parser.GlobalData.Papyrus.Script.read_script()
 
     IO.inspect filled_state
 
@@ -155,6 +156,8 @@ defmodule Parser.GlobalData.Papyrus do
 
     { rest, %{state | script_count: value} }
   end
+
+
 
   # defp read_scripts_structure(count, data) do
   #
