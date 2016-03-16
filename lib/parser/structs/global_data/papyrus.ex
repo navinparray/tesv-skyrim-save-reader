@@ -10,6 +10,10 @@ defmodule Parser.Structs.GlobalData.Papyrus do
     script_instance_count: 0,
     script_instance: [Parser.Structs.GLobalData.ScriptInstance],
     reference_count: 0,
-    reference: [Parser.Structs.GLobalData.References]
+    reference: [Parser.Structs.GLobalData.References],
+    array_info_count: 0,
+    array_info: [Parser.Structs.GlobalData.ArrayInfo],
+    papyrus_runtime: 0,
+    active_script_count: 0
   ]
 end
