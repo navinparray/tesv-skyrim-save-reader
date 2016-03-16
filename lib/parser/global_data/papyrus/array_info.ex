@@ -16,8 +16,7 @@ defmodule Parser.GlobalData.Papyrus.ArrayInfo do
       data,
       recall
     )
-
-    {rest, %{state | script: filled_state}}
+    {rest, %{state | array_info: filled_state}}
   end
 
   defp read_array_id({data, state}) do

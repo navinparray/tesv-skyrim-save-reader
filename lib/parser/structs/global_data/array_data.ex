@@ -3,6 +3,6 @@ defmodule Parser.Structs.GlobalData.ArrayData do
 
   defstruct [
     array_id: 0,
-    data: [Parser.Structs.GlobalData.MemberData]
+    member: [Parser.Structs.GlobalData.Variable]
   ]
 end

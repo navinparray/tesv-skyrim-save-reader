@@ -28,8 +28,9 @@ defmodule Parser.GlobalData.Papyrus do
       |> Parser.GlobalData.Papyrus.ActiveScript.read()
       |> Parser.GlobalData.Papyrus.ScriptData.read()
       |> Parser.GlobalData.Papyrus.ReferenceData.read()
+      |> Parser.GlobalData.Papyrus.ArrayData.read()
 
-    IO.inspect filled_state
+    IO.inspect filled_state.array_data
 
   end
 

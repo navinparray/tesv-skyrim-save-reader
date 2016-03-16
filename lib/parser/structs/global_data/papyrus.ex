@@ -17,6 +17,7 @@ defmodule Parser.Structs.GlobalData.Papyrus do
     active_script_count: 0,
     active_script: [Parser.Structs.GlobalData.ActiveScript],
     script_data: [Parser.Structs.GlobalData.ScriptData],
-    reference_data: [Parser.Structs.GlobalData.ReferenceData]
+    reference_data: [Parser.Structs.GlobalData.ReferenceData],
+    array_data: [Parser.Structs.GlobalData.ArrayData]
   ]
 end
