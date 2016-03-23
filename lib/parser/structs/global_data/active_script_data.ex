@@ -5,7 +5,7 @@ defmodule Parser.Structs.GlobalData.ActiveScriptData do
     script_id: 0,
     major_version: 0,
     minor_version: 0,
-    variable: %Parser.Structs.GlobalData.Variable{},
+    unknown0: %Parser.Structs.GlobalData.Variable{},
     flag: 0,
     unknown_byte: 0,
     unknown2: 0,
