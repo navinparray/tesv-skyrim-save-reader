@@ -1,7 +1,7 @@
 defmodule Parser.GlobalData.Papyrus.Parameter do
 
   def read({data, state}, param_list) do
-    {rest, filled_state} = read_opcode_parameter(data, param_list)
+    {rest, filled_state} = read_opcode_params(data, param_list)
 
     {rest, %{state | param: filled_state}}
   end
@@ -64,7 +64,7 @@ defmodule Parser.GlobalData.Papyrus.Parameter do
       end
     end
 
-    Enum.map(param_type_listing, get_params)
+    Enum.map_reduce(param_type_listing, get_params)
   end
 
   defp read_parameter_structure(count, data) do
